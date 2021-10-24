@@ -35,8 +35,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
   - [Before the hands-on lab](#before-the-hands-on-lab)
   - [Exercise 1: Finish configuring Azure services and retrieve values](#exercise-1-finish-configuring-azure-services-and-retrieve-values)
     - [Task 1: Copy Azure Container Registry access keys](#task-1-copy-azure-container-registry-access-keys)
-    - [Task 2: Copy Azure Database for PostgreSQL coordinator name](#task-2-copy-azure-database-for-postgresql-coordinator-name)
-    - [Task 3: Copy Event Hub connection string](#task-3-copy-event-hub-connection-string)
+    - [Task 2: Copy Event Hub connection string](#task-2-copy-event-hub-connection-string)
   - [Exercise 2: Deploy a factory load simulator](#exercise-2-deploy-a-factory-load-simulator)
     - [Task 1: Add a new device in IoT Hub](#task-1-add-a-new-device-in-iot-hub)
     - [Task 2: Install and configure IoT Edge on a Linux virtual machine](#task-2-install-and-configure-iot-edge-on-a-linux-virtual-machine)
@@ -92,11 +91,25 @@ The Innovate and modernize apps with Data and AI hands-on lab is an exercise tha
 
 ![High-level architecture, as described below.](media/architecture-diagram.png "High-level architecture")
 
-The solution begins with multiple IoT devices, located within multiple factories, that securely connect to Azure IoT Hub to send telemetry. IoT Hub provides IoT device management, telemetry ingest at high volume, and the ability to send commands to devices as needed. IoT Edge allows individual manufacturing machines to interact with IoT Hub by sending telemetry messages to IoT Hub and by ensuring that edge devices are running the latest versions of deployed modules. Telemetry from IoT Hub automatically triggers an Azure function, which processes the events, assigns a unique `entity_id`, and stores them in an Azure Cosmos DB telemetry container. The document TTL (time-to-live) is set to 30 days, after which time they will automatically expire. The data is replicated long-term to the analytical store with no TTL. The analytical store saves all transactional data in columnar storage as Parquet files in Azure storage in a cost-effective way, automatically. No ETL required. A different Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed for additional processing, including predictive maintenance scoring via a custom-trained Machine Learning model deployed to Azure Kubernetes Service (AKS) for real-time scoring. The function sends the scored data to an Azure Event Hub. Another function that consumes the change feed and saves the event data to domain entities, including state data, and stores them in Azure PostgreSQL Hyperscale (Citus). This database stores all sensor data as domain entities, partitioned by device Id, which the Hyperscale features uses to automatically shard the data for horizontal scaling and high performance reads and writes. An Azure Stream Analytics job reads the device telemetry, which includes the predictive maintenance prediction, and applies additional processing through a SQL-like query language. It uses an Azure Cognitive Services Anomaly Detector service to perform Changepoint and Spike-and-Dip anomaly detection. It also performs windowed aggregate queries against the time series data to create aggregates on machine maintenance predictions, grouped by maintenance requirement, factory, and machine. The temperature anomalies, telemetry with predictive maintenance scores, and temperature anomaly data is saved to another Azure Cosmos DB container, named `scored_telemetry`. Another Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed from the `scored_telemetry` container. It saves the anomaly detection, windowed aggregates, and scored predictive maintenance event data to domain entities, including state data, and writes them to Azure PostgreSQL.
+The solution begins with multiple IoT devices, located within multiple factories, that securely connect to Azure IoT Hub to send telemetry. IoT Hub provides IoT device management, telemetry ingest at high volume, and the ability to send commands to devices as needed. IoT Edge allows individual manufacturing machines to interact with IoT Hub by sending telemetry messages to IoT Hub and by ensuring that edge devices are running the latest versions of deployed modules. Telemetry from IoT Hub automatically triggers an Azure function, which processes the events, assigns a unique `entity_id`, and stores them in an Azure Cosmos DB telemetry container. The document TTL (time-to-live) is set to 30 days, after which time they will automatically expire. The data is replicated long-term to the analytical store with no TTL. The analytical store saves all transactional data in columnar storage in a cost-effective way, automatically, with no ETL required.
+
+![Data is pushed into IoT Hub, and then an Azure Function processes that data and writes it to Cosmos DB.](media/architecture-diagram-1.png "From IoT to Cosmos DB")
+
+A different Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed for additional processing, including predictive maintenance scoring via a custom-trained Machine Learning model deployed to Azure Kubernetes Service (AKS) for real-time scoring.
+
+![Another Azure Function performs telemetry scoring.](media/architecture-diagram-2.png "Predictive maintenance scoring")
+
+The function sends the scored data to an Azure Event Hub. Another function that consumes the change feed and saves the event data to domain entities, including state data. This database stores all sensor data as domain entities, partitioned by device Id, which the Hyperscale features uses to automatically shard the data for horizontal scaling and high performance reads and writes. An Azure Stream Analytics job reads the device telemetry, which includes the predictive maintenance prediction, and applies additional processing through a SQL-like query language. It uses an Azure Cognitive Services Anomaly Detector service to perform Changepoint and Spike-and-Dip anomaly detection. It also performs windowed aggregate queries against the time series data to create aggregates on machine maintenance predictions, grouped by maintenance requirement, factory, and machine. The temperature anomalies, telemetry with predictive maintenance scores, and temperature anomaly data is saved to another Azure Cosmos DB container, named `scored_telemetry`. Another Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed from the `scored_telemetry` container. It saves the anomaly detection, windowed aggregates, and scored predictive maintenance event data to domain entities, including state data, and writes them to Cosmos DB.
+
+![The Function writes to Event Hub, were data is aggregated and anomaly detection occurs.  The results then are written to Cosmos DB.](media/architecture-diagram-3.png "Anomaly detection and writing to scored data")
 
 An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service, and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
 
-The web app is a modernized version of WWI's old monolithic web app, implementing a microservices pattern through Docker containers deployed to Azure. The CQRS pattern is applied by separating create, update, and delete (CUD) commands from query (read) commands, issued by microservices deployed to different containers. The metadata command microservice, for example, issues CUD commands to the `metadata` Azure Cosmos DB container. Factory, machine, maintenance criteria, and other metadata are stored in this container. A query microservice issues read requests to read microservices for telemetry data stored in Azure PostgreSQL, and metadata stored in Azure Cosmos DB.
+![Cosmos DB integrates with Azure Synpase Analytics via Synapse Link.](media/architecture-diagram-4.png "Azure Synapse Analytics interactions with Cosmos DB")
+
+The web app is a modernized version of WWI's old monolithic web app, implementing a microservices pattern through Docker containers deployed to Azure. The CQRS pattern is applied by separating create, update, and delete (CUD) commands from query (read) commands, issued by microservices deployed to different containers. The metadata command microservice, for example, issues CUD commands to the `metadata` Azure Cosmos DB container. Factory, machine, maintenance criteria, and other metadata are stored in this container. A query microservice issues read requests to read microservices for telemetry and metadata from Azure Cosmos DB.
+
+![A Microservices-based application architecture interacts with Cosmos DB.](media/architecture-diagram-5.png "Microservices")
 
 ## Requirements
 
@@ -114,15 +127,11 @@ The web app is a modernized version of WWI's old monolithic web app, implementin
 
 3. Install [the Azure Machine Learning SDK for Python](https://docs.microsoft.com/python/api/overview/azure/ml/install?view=azure-ml-py).
 
-4. Install [Azure Data Studio](https://docs.microsoft.com/sql/azure-data-studio/download-azure-data-studio).
+4. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
 
-    - Install the [PostgreSQL extension](https://docs.microsoft.com/sql/azure-data-studio/postgres-extension).
+5. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
 
-5. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
-
-6. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
-
-7. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
+6. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
 
 ## Before the hands-on lab
 
@@ -146,29 +155,11 @@ The container registry will store container images you will create during the ha
 
     From there, select the **modernize-app** resource group.
 
-6. In the **Settings** section on the menu, select **Access keys**.  Then, on the Access keys page, **Enable** the Admin user.
+2. In the **Settings** section on the menu, select **Access keys**.  Then, on the Access keys page, **Enable** the Admin user.
 
     ![The Admin user is enabled for the container registry.](media/azure-create-container-registry-2.png 'Container registry Access keys')
 
-### Task 2: Copy Azure Database for PostgreSQL coordinator name
-
-In this task, you will deploy a new Azure Database for PostgreSQL, selecting the Hyperscale (Citus) option.
-
-1. Navigate back to the lab resource group and select the Azure Database for PostgreSQL server group.
-
-   ![The Azure Database for PostgreSQL server group is highlighted.](media/azure-create-postgres-5.png 'Resource Group')
-
-2. Copy the **Coordinator name** to the clipboard.  Record this information for later use.
-
-    ![The overview page shows the Coordinator name value after deployment is complete.](media/azure-create-postgres-3.png 'Coordinator name')
-
-3. Select **Networking** in the left-hand menu underneath Settings. In the Firewall rules blade, select **Yes** to *allow Azure services and resources to access this server group*.
-
-   ![The Firewall rules blade is displayed.](media/azure-create-postgres-6.png 'Firewall rules')
-
-4. Select **Save** to apply the new firewall rule.
-
-### Task 3: Copy Event Hub connection string
+### Task 2: Copy Event Hub connection string
 
 1. Navigate back to the lab resource group and select the Event Hubs Namespace.
 
@@ -184,11 +175,13 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
 ## Exercise 2: Deploy a factory load simulator
 
-Duration: 40 minutes
+Duration: 20 minutes
 
 [Azure IoT Hub](https://azure.microsoft.com/services/iot-hub/) is a Microsoft offering which provides secure and reliable communication between IoT devices and cloud services in Azure. The aim of this service is to provide bidirectional communication at scale. The core focus of many industrial companies is not on cloud computing; therefore, they do not necessarily have the personnel skilled to provide guidance and to stand up a reliable and scalable infrastructure for an IoT solution. It is imperative for these types of companies to enter the IoT space not only for the cost savings associated with remote monitoring, but also to improve safety for their workers and the environment.
 
 Wide World Importers is one such company that could use a helping hand entering the IoT space.  They have an existing suite of sensors and on-premises data collection mechanisms at each factory but would like to centralize data in the cloud. To achieve this, we will stand up a IoT Hub and assist them with the process of integrating existing sensors with IoT Hub via [Azure IoT Edge](https://azure.microsoft.com/services/iot-edge/). A [predictable cost model](https://azure.microsoft.com/pricing/details/iot-hub/) also ensures that there are no financial surprises.
+
+For this lab, we will simulate the IoT process using an Azure Function.
 
 ### Task 1: Add a new device in IoT Hub
 

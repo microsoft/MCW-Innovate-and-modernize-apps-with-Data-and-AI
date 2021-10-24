@@ -9,7 +9,7 @@ Whiteboard design session student guide
 </div>
 
 <div class="MCWHeader3">
-June 2021
+November 2021
 </div>
 
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
@@ -87,8 +87,6 @@ They recognize their solutions will benefit from the cloud and want to ensure th
 5. In addition to storing data in the cloud, we would like to integrate machine learning into our application processing, including detecting anomalies in sensor data and predicting when machine maintenance will be necessary based on sensor data.
 
 6. We want to reduce our reliance on a classic web application server for data processing and move toward a microservice approach.
-
-7. Our developers and administrators are very familiar with PostgreSQL and want to use this as the primary relational database on-premises and in Azure. We are concerned about performance in Azure, however--because we will collect data from all of our factories, we would like to have a solution which allows us to scale out our PostgreSQL services easily.
 
 ### Customer objections
 
