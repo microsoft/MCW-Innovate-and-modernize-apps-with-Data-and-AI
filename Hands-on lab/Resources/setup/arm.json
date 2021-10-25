@@ -50,9 +50,6 @@
       "functionAppName": "[concat('modernize-app-', variables('uniqueSuffix'))]",
       "functionAppHostingPlanName": "[concat('ASP-modernize-app-', variables('uniqueSuffix'))]",
       "streamAnalyticsName": "[concat('modernize-app-stream', variables('uniqueSuffix'))]",
-      "iotHubName": "[concat('modernize-app-iot-', parameters('uniqueSuffix'))]",
-      "consumerGroupName": "[concat(variables('iotHubName'), '/events/cg1')]",
-      "postgresServerGroupName": "[concat('modernize-app-', parameters('uniqueSuffix'))]",
       "api": "2020-10-05-privatepreview",
       "firewallrules": {
         "batch": {
@@ -322,19 +319,7 @@
       {
         "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
         "apiVersion": "2019-06-01",
-        "name": "[concat(variables('adlsStorageAccountName'), '/default/staging')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('adlsStorageAccountName'), 'default')]",
-          "[resourceId('Microsoft.Storage/storageAccounts', variables('adlsStorageAccountName'))]"
-        ],
-        "properties": {
-          "publicAccess": "None"
-        }
-      },
-      {
-        "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-        "apiVersion": "2019-06-01",
-        "name": "[concat(variables('adlsStorageAccountName'), '/default/wwi-02')]",
+        "name": "[concat(variables('adlsStorageAccountName'), '/default/synapse')]",
         "dependsOn": [
           "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('adlsStorageAccountName'), 'default')]",
           "[resourceId('Microsoft.Storage/storageAccounts', variables('adlsStorageAccountName'))]"
@@ -466,103 +451,6 @@
           }
         }
       },
-      {
-        "type": "Microsoft.Devices/IotHubs",
-        "apiVersion": "2020-03-01",
-        "name": "[variables('iotHubName')]",
-        "location": "[variables('location')]",
-        "properties": {
-          "eventHubEndpoints": {
-            "events": {
-              "retentionTimeInDays": 1,
-              "partitionCount": 2
-            }
-          },
-          "cloudToDevice": {
-            "defaultTtlAsIso8601": "PT1H",
-            "maxDeliveryCount": 10,
-            "feedback": {
-              "ttlAsIso8601": "PT1H",
-              "lockDurationAsIso8601": "PT60S",
-              "maxDeliveryCount": 10
-            }
-          },
-          "messagingEndpoints": {
-            "fileNotifications": {
-              "ttlAsIso8601": "PT1H",
-              "lockDurationAsIso8601": "PT1M",
-              "maxDeliveryCount": 10
-            }
-          }
-        },
-        "sku": {
-          "name": "F1",
-          "capacity": 1
-        }
-      },
-      {
-        "type": "Microsoft.Devices/iotHubs/eventhubEndpoints/ConsumerGroups",
-        "apiVersion": "2020-03-01",
-        "name": "[variables('consumerGroupName')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Devices/IotHubs', variables('iotHubName'))]"
-        ]
-      },
-      {
-            "apiVersion": "[variables('api')]",
-            "location": "[variables('location')]",
-            "name": "[variables('postgresServerGroupName')]",
-            "type": "Microsoft.DBforPostgreSQL/serverGroupsv2",
-            "properties": {
-                "createMode": "Default",
-                "administratorLogin": "citus",
-                "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
-                "backupRetentionDays": 35,
-                "enableMx": false,
-                "enableZfs": false,
-                "previewFeatures": true,
-                "postgresqlVersion": "13",
-                "serverRoleGroups": [
-                    {
-                        "name": "",
-                        "role": "Coordinator",
-                        "serverCount": 1,
-                        "serverEdition": "GeneralPurpose",
-                        "vCores": 2,
-                        "storageQuotaInMb": 131072,
-                        "enableHa": false
-                    },
-                    {
-                        "name": "",
-                        "role": "Worker",
-                        "serverCount": 0,
-                        "serverEdition": "MemoryOptimized",
-                        "vCores": 4,
-                        "storageQuotaInMb": 524288,
-                        "enableHa": false
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.DBforPostgreSQL/serverGroupsv2/firewallRules",
-            "name": "[concat(variables('postgresServerGroupName'),'/',variables('firewallrules').batch.rules[copyIndex()].Name)]",
-            "apiVersion": "[variables('api')]",
-            "location": "[variables('location')]",
-            "copy": {
-              "name": "firewallRulesCopy",
-              "mode": "Serial",
-              "batchSize": 1,
-              "count": "[length(variables('firewallrules').batch.rules)]"
-            },
-            "dependsOn": [
-                "[concat('Microsoft.DBforPostgreSQL/serverGroupsv2/', variables('postgresServerGroupName'))]"
-            ],
-            "properties": {
-              "startIpAddress": "[variables('firewallrules').batch.rules[copyIndex()].StartIpAddress]",
-              "endIpAddress": "[variables('firewallrules').batch.rules[copyIndex()].EndIpAddress]"
-            }
-        },
         {
             "apiVersion": "2018-11-01",
             "name": "[variables('functionAppName')]",
