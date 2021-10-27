@@ -1,5 +1,5 @@
 ﻿export interface IMachineTelemetryDto {
-	id: number;
+	id: string;
 	machineId?: number;
 	eventId: string;
 	eventType: string;

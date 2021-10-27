@@ -47,21 +47,16 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
     - [Task 2: Create Cosmos DB containers](#task-2-create-cosmos-db-containers)
     - [Task 3: Create an Azure Function to write event data to Cosmos DB](#task-3-create-an-azure-function-to-write-event-data-to-cosmos-db)
     - [Task 4: Deploy and configure an Azure Function](#task-4-deploy-and-configure-an-azure-function)
-  - [Exercise 5:  Enrich event telemetry with predictive maintenance results](#exercise-5--enrich-event-telemetry-with-predictive-maintenance-results)
+  - [Exercise 4:  Enrich event telemetry with predictive maintenance results](#exercise-4--enrich-event-telemetry-with-predictive-maintenance-results)
     - [Task 1:  Create an Event Hub](#task-1--create-an-event-hub)
-    - [Task 2: Create an events table in PostgreSQL](#task-2-create-an-events-table-in-postgresql)
-    - [Task 3: Create an Azure Function based on a Cosmos DB trigger](#task-3-create-an-azure-function-based-on-a-cosmos-db-trigger)
-  - [Exercise 6:  Enrich event telemetry with automated anomaly detection](#exercise-6--enrich-event-telemetry-with-automated-anomaly-detection)
+    - [Task 2: Create an Azure Function based on a Cosmos DB trigger](#task-2-create-an-azure-function-based-on-a-cosmos-db-trigger)
+  - [Exercise 5:  Enrich event telemetry with automated anomaly detection](#exercise-5--enrich-event-telemetry-with-automated-anomaly-detection)
     - [Task 1: Start an Azure Stream Analytics job](#task-1-start-an-azure-stream-analytics-job)
-  - [Exercise 7:  Send scored telemetry data to PostgreSQL](#exercise-7--send-scored-telemetry-data-to-postgresql)
-    - [Task 1: Create an Azure Function to write temperature anomalies data to PostgreSQL](#task-1-create-an-azure-function-to-write-temperature-anomalies-data-to-postgresql)
-    - [Task 2: Deploy and configure an Azure Function](#task-2-deploy-and-configure-an-azure-function)
-  - [Exercise 8: Modernize services logic to use event sourcing and CQRS](#exercise-8-modernize-services-logic-to-use-event-sourcing-and-cqrs)
+  - [Exercise 6: Modernize services logic to use event sourcing and CQRS](#exercise-6-modernize-services-logic-to-use-event-sourcing-and-cqrs)
     - [Task 1: Build and push the containers](#task-1-build-and-push-the-containers)
     - [Task 2: Create a deployment file](#task-2-create-a-deployment-file)
     - [Task 3: Deploy the container group](#task-3-deploy-the-container-group)
-    - [Task 4: Migrate the Change Feed Processor Function to a Container](#task-4-migrate-the-change-feed-processor-function-to-a-container)
-  - [Exercise 9: View the factory status in a Power BI report](#exercise-9-view-the-factory-status-in-a-power-bi-report)
+  - [Exercise 7: View the factory status in a Power BI report](#exercise-7-view-the-factory-status-in-a-power-bi-report)
     - [Task 1: Import events data via a Spark notebook](#task-1-import-events-data-via-a-spark-notebook)
     - [Task 2: Create a Power BI notebook](#task-2-create-a-power-bi-notebook)
     - [Task 3: Embed the Power BI notebook](#task-3-embed-the-power-bi-notebook)
@@ -213,38 +208,52 @@ Before you begin streaming data, it is time to train and build a model to predic
 
 3. Navigate to the **Access keys** option in the **Security + networking** selection.  Select **Show keys** to make the keys available, and then copy the **Key** for use later.
 
-4. Return to the **modernize-app** resource group.  Select the **modernize-app-#SUFFIX#** resource with a Type of **Machine Learning**.
+    ![Copy the access key.](media/storage-account-key.png 'Storage account access key')
+
+4. Navigate to the **Access Control (IAM)** menu setting.  Navigate to **Role assignments** and select **+ Add** to add a new role.  Choose **Add role assignment** to add a new role assignment.
+
+    ![The option to add a role assignment is selected.](media/storage-account-role-assignment.png 'Role assignments')
+
+5. Select the **Storage Blob Data Owner** role and select **Next**.
+
+    ![The Storage Blob Data Owner role assignment is selected.](media/storage-account-role-assignment-2.png 'Storage Blob Data Owner')
+
+6. Select **+ Select members** and choose your account.  Then, select **Review + assign** to create the role assignment.
+
+    ![Add the role assignment.](media/storage-account-role-assignment-3.png 'Create role assignment')
+
+7. Return to the **modernize-app** resource group.  Select the **modernize-app-#SUFFIX#** resource with a Type of **Machine Learning**.
 
     ![The Machine Learning resource is selected.](media/azure-ml-select.png 'Machine Learning')
 
-5. Select **Launch studio** to open the Azure Machine Learning studio.
+8. Select **Launch studio** to open the Azure Machine Learning studio.
 
     ![The option to launch Azure Machine Learning Studio is selected.](media/azure-ml-launch.png 'Launch now')
 
-6. In the Azure Machine Learning studio, select the **Datastores** option in the Manage tab. Then, select the **+ New datastore** option.
+9. In the Azure Machine Learning studio, select the **Datastores** option in the Manage tab. Then, select the **+ New datastore** option.
 
     ![The option to create a new datastore is selected.](media/azure-ml-new-datastore.png 'New datastore')
 
-7. In the **New datastore** window, complete the following:
+10. In the **New datastore** window, complete the following:
 
-   | Field                          | Value                                              |
-   | ------------------------------ | ------------------------------------------         |
-   | Datastore name                 | _`modernizeappstorage`_                            |
-   | Datastore type                 | _select `Azure Blob Storage`_                      |
-   | Account selection method       | _select `From Azure subscription`_                 |
-   | Subscription ID                | _select the appropriate subscription_              |
-   | Storage account                | _select `modappadls#SUFFIX#`_                      |
-   | Blob container                 | _select `synapse`_                                 |
-   | Save credentials with the datastore for data access | _select `Yes`_                |
-   | Authentication type            | _select `Account key`_                             |
-   | Account key                    | _enter the account key_                            |
-   | Use workspace managed identity for data preview ...      | _select `No`_            |
+    | Field                          | Value                                              |
+    | ------------------------------ | ------------------------------------------         |
+    | Datastore name                 | _`modernizeappstorage`_                            |
+    | Datastore type                 | _select `Azure Blob Storage`_                      |
+    | Account selection method       | _select `From Azure subscription`_                 |
+    | Subscription ID                | _select the appropriate subscription_              |
+    | Storage account                | _select `modappadls#SUFFIX#`_                      |
+    | Blob container                 | _select `synapse`_                                 |
+    | Save credentials with the datastore for data access | _select `Yes`_                |
+    | Authentication type            | _select `Account key`_                             |
+    | Account key                    | _enter the account key_                            |
+    | Use workspace managed identity for data preview ...      | _select `No`_            |
 
-   ![In the New datastore output, form field entries are filled in.](media/azure-ml-new-datastore-1.png 'New datastore')
+    ![In the New datastore output, form field entries are filled in.](media/azure-ml-new-datastore-1.png 'New datastore')
 
-   >**Note**: If you have not saved your storage account key anywhere yet, navigate to your storage account. Then, in the **Settings** menu, select **Access keys** and copy the **Key** value in the **key1** section.
+    >**Note**: If you have not saved your storage account key anywhere yet, navigate to your storage account. Then, in the **Settings** menu, select **Access keys** and copy the **Key** value in the **key1** section.
 
-8. Select **Create** to add the new output.
+11. Select **Create** to add the new output.
 
 ### Task 3: Develop the predictive maintenance model
 
@@ -685,7 +694,7 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
 
     ![The Azure Function built successfully.](media/code-function-build-succeeded.png 'Build succeeded.')
 
-    > **Note**:  If you get warnings which read like "Could not evaluate 'Cosmos.CRTCompat.dll' for extension metadata" that this is fine. It has to do with missing debugger symbols on the Cosmos DB NuGet packages and will not affect deployment or the lab.
+    > **Note**:  If you get warnings which read like "Could not evaluate 'Cosmos.CRTCompat.dll' for extension metadata" that this is fine. It has to do with missing debugger symbols on the Cosmos DB NuGet packages and will not affect deployment or the lab.  As long as you see that the build succeeded with 0 errors, it should be fine.
 
 ### Task 4: Deploy and configure an Azure Function
 
@@ -721,21 +730,19 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
    | cosmosPrimaryKey               | _enter the primary key for your Cosmos DB account_ |
    | azureMLEndpointUrl             | _enter the URL (with /score) from exercise 3_      |
    | modernizeapp\_COSMOSDB         | _`AccountEndpoint=https://modernize-app-#SUFFIX#.documents.azure.com:443/;AccountKey={PRIMARY KEY};`_ |
-   | pg\_connection                  | _`Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true`_ |
-   | IoTHubTriggerConnection        | _enter the Event Hub compatible endpoint for your IoT Hub_ |
-   | EventHubConnection             | _enter the Event Hub primary connection string, NOT the IoT Hub connection string_    |
+   | EventHubConnection             | _enter the Event Hub primary connection string_    |
 
-8. Select **Save** and then **Continue** on the App Service menu to save the new application settings.  These application settings will be used in the Azure functions we have created.  `cosmosEndpointUrl`, `cosmosPrimaryKey`, and `IoTHubTriggerConnection` will be used in the `WriteEventsToTelemetryContainer` function.  `azureMLEndpointUrl`, `pg_connection`, and `EventHubConnection` will be used in the `ProcessTelemetryEvents` function.  Finally, `modernizeapp_COSMOSDB` will be used in the `ProcessTemperatureAnomalyEvents` and `ProcessTelemetryEvents` functions.  By creating these application settings, we avoid the risk of hard-coding connection strings in our files or including passwords in configuration files which might be checked into source control.  The application settings are stored securely and if you have multiple environments, you can configure each App Service to use different settings.
+8. Select **Save** and then **Continue** on the App Service menu to save the new application settings.  These application settings will be used in the Azure functions we have created.  `cosmosEndpointUrl` and `cosmosPrimaryKey` will be used in the `WriteEventsToTelemetryContainer` function.  `azureMLEndpointUrl` and `EventHubConnection` will be used in the `ProcessTelemetryEvents` function.  Finally, `modernizeapp_COSMOSDB` will be used in the `ProcessTemperatureAnomalyEvents` and `ProcessTelemetryEvents` functions.  By creating these application settings, we avoid the risk of hard-coding connection strings in our files or including passwords in configuration files which might be checked into source control.  The application settings are stored securely and if you have multiple environments, you can configure each App Service to use different settings.
 
     ![The New application settings are filled out.](media/azure-function-new-appsettings.png 'New application settings')
 
 9. Return to the **Overview** menu and then **Stop** and **Start** the Azure Function. This will allow the function to pick up your new application settings and begin publishing data to Cosmos DB.
 
-## Exercise 5:  Enrich event telemetry with predictive maintenance results
+## Exercise 4:  Enrich event telemetry with predictive maintenance results
 
 Duration: 30 minutes
 
-Events are loading into the `telemetry` container. Using that data, we can create a function which handles and enriches the telemetry data. In this exercise, you will create a function which writes telemetry data to PostgresSQL, then enriches the data with results from your predictive maintenance model and writes the results to PostgreSQL and an Event Hub.
+Events are loading into the `telemetry` container. Using that data, we can create a function which handles and enriches the telemetry data. In this exercise, you will create a function which reads telemetry data from Cosmos DB, then enriches the data with results from your predictive maintenance model and writes the results to an Event Hub.
 
 ### Task 1:  Create an Event Hub
 
@@ -767,101 +774,7 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
 6. Give the consumer group a name of `anomalydetection` and select **Create**.
 
-### Task 2: Create an events table in PostgreSQL
-
-1. Navigate to the **modernize-app** resource group in the [Azure portal](https://portal.azure.com).
-
-    ![The resource group named modernize-app is selected.](media/azure-modernize-app-rg.png 'The modernize-app resource group')
-
-    If you do not see the resource group in the Recent resources section, type in "resource groups" in the top search menu and then select **Resource groups** from the results.
-
-    ![In the Services search result list, Resource groups is selected.](media/azure-resource-group-search.png 'Resource groups')
-
-    From there, select the **modernize-app** resource group.
-
-2. Select the PostgreSQL server group you created before the hands-on lab. This will have a Type of **Azure Database for PostgreSQL server group**. There are other entries of type Azure Database for PostgreSQL server v2, but we will need to gather information from the server group itself.
-
-    ![In the modernize-app resource group, the PostgreSQL server group is selected.](media/azure-postgres-server-group.png 'Azure Database for PostgreSQL server group')
-
-3. On the **Overview** page, copy down the **Coordinator name** field.
-
-    ![The coordinator name for the PostgreSQL Hyperscale server group is selected.](media/azure-postgres-coordinator.png 'Coordinator name')
-
-4. Open Azure Data Studio and connect to the coordinator server by filling in the following in the Connection Details form:
-
-   | Field                          | Value                                       |
-   | ------------------------------ | ------------------------------------------  |
-   | Connection type                | _select `PostgreSQL`_                       |
-   | Server name                    | _enter the coordinator name_                |
-   | Authentication type            | _select `Password`_                         |
-   | User name                      | _enter `citus`_                             |
-   | Password                       | _enter the password_                        |
-   | Database name                  | _enter `citus`_                             |
-
-   > **Note**: You might need to force SSL to connect to PostgreSQL on Azure. To do this in Azure Data Studio, select the **Advanced** button and change the value for SSL mode to **Require** from its default value of Prefer.
-
-   ![The form fields are completed with the previously described settings.](media/azure-data-studio-citus-connection-details.png 'Azure Data Studio Settings')
-
-5. After connecting to PostgreSQL in Azure Data Studio, select **New Query** from the top menu to open a new query window.
-
-    ![The New Query option is selected.](media/azure-data-studio-citus-new-query.png 'New Query')
-
-6. Enter the following query and then select **Run** to create an `event` table.
-
-    ```sql
-    CREATE TABLE event(
-        id serial,
-        machine_id int,
-        event_id varchar(40),
-        event_type varchar(70),
-        entity_type varchar(70),
-        entity_id varchar(40),
-        event_data json
-    )
-    PARTITION BY RANGE (machine_id);
-
-    -- Create a table for machines in the 1xxxx series
-    -- This demonstrates the ability to create new tables for partitions of data
-    -- rather than an ideal partitioning strategy
-    CREATE TABLE event_1
-        partition OF event(machine_id)
-        FOR VALUES FROM (10000) TO (20000);
-
-    -- Create a table for machines in the 2xxxx series
-    CREATE TABLE event_2
-        partition OF event(machine_id)
-        FOR VALUES FROM (20000) TO (30000);
-    ```
-
-   ![The event table is created.](media/azure-data-studio-event.png 'The event table')
-
-7. In a new query window, run the following to ensure that you are able to insert a row into the sensordata partitioned table.
-
-    ```sql
-    INSERT INTO event(
-        machine_id,
-        event_id,
-        event_type,
-        entity_type,
-        entity_id,
-        event_data
-    )
-    VALUES
-    (
-        21644,
-        uuid_generate_v4(),
-        'Telemetry Ingest',
-        'MachineTelemetry',
-        uuid_generate_v4(),
-        '{ "Test": "Yes" }'
-    );
-
-    SELECT * FROM event;
-    ```
-
-    You should see one row returned.
-
-### Task 3: Create an Azure Function based on a Cosmos DB trigger
+### Task 2: Create an Azure Function based on a Cosmos DB trigger
 
 1. Open Visual Studio Code and navigate to the folder you created in Exercise 4 for Azure Functions. In the Azure menu, navigate to the top-right corner and select **Create Function...**
 
@@ -886,7 +799,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
     ```json
     "azureMLEndpointUrl": "{ Your Azure ML endpoint with /score }",
-    "pg_connection": "Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true",
     "EventHubConnection": "{ Your Event Hub primary connection string }"
     ```
 
@@ -909,7 +821,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Linq;
-    using Npgsql;
     using Azure.Messaging.EventHubs;
     using Azure.Messaging.EventHubs.Producer;
 
@@ -958,9 +869,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                     TelemetryOutput to = LoadTelemetryRecord(doc);
                     MessageBody msg = JsonConvert.DeserializeObject<MessageBody>(to.event_data);
 
-                    // Write telemetry event to Postgres
-                    WriteTelemetryEventToPostgres(to);
-
                     // Perform Azure ML call and build a new output object
                     InputData payload = new InputData();
                     var machinetemp = msg.machine.temperature;
@@ -972,7 +880,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                     TelemetryOutput newTo = CreateNewTelemetryOutput(to, msg, maintenanceRecommendation);
 
                     // Write maintenance recommendation events for downstream processing
-                    WriteTelemetryEventToPostgres(newTo);
                     await WriteTelemetryEventToEventHub(newTo);
                 }
             }
@@ -1031,46 +938,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                 return newTo;
             }
 
-            public static void WriteTelemetryEventToPostgres(TelemetryOutput to)
-            {
-                string insertCommand = @"INSERT INTO event(
-                    machine_id,
-                    event_id,
-                    event_type,
-                    entity_type,
-                    entity_id,
-                    event_data
-                )
-                VALUES
-                (
-                    @machine_id,
-                    @event_id,
-                    @event_type,
-                    @entity_type,
-                    @entity_id,
-                    CAST(@event_data AS json)
-                );";
-
-                // Connect to Postgres
-                var connStr = Environment.GetEnvironmentVariable("pg_connection");
-                using (var conn = new NpgsqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    using (var cmd = new NpgsqlCommand(insertCommand, conn))
-                    {
-                        cmd.Parameters.AddWithValue("machine_id", to.machineid);
-                        cmd.Parameters.AddWithValue("event_id", to.id);
-                        cmd.Parameters.AddWithValue("event_type", to.event_type);
-                        cmd.Parameters.AddWithValue("entity_type", to.entity_type);
-                        cmd.Parameters.AddWithValue("entity_id", to.entity_id);
-                        cmd.Parameters.AddWithValue("event_data", to.event_data);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-
             public static async Task WriteTelemetryEventToEventHub(TelemetryOutput to)
             {
                 await using (var producerClient = new EventHubProducerClient(eventHubConnection, eventHubName))
@@ -1086,19 +953,16 @@ Events are loading into the `telemetry` container. Using that data, we can creat
     }
     ```
 
-    The code in this function collects data from a specified Cosmos DB collection and writes it to Postgres.  The `Run()` method triggers every time a new entry is added to the Cosmos DB collection `sensors.telemetry`.  There can be more than one document per `Run()` call, so we need to process each one individually.  We first convert the Cosmos telemetry record into a `TelemetryOutput` and deserialize the event's `MessageBody`.
-
-    Immediately after loading the telemetry record, we write it out to Postgres using `WriteTelemetryEventToPostgres`.  This method connects to Postgres using the `pg_connection` connection string and executes the `insertCommand` SQL statement to perform an insertion.
+    The code in this function collects data from a specified Cosmos DB collection and writes it to an Event Hub.  The `Run()` method triggers every time a new entry is added to the Cosmos DB collection `sensors.telemetry`.  There can be more than one document per `Run()` call, so we need to process each one individually.  We first convert the Cosmos telemetry record into a `TelemetryOutput` and deserialize the event's `MessageBody`.
 
     The next step is to call the Azure Machine Learning endpoint for the stamp press model.  This requires the machine temperature and pressure, which we can collect from the message.  We then call `GetMaintenancePrediction()` to make the HTTP request.  Azure Machine Learning returns back a list of predictions, but because we only sent one item's inputs, we expect to get only one result.
 
-    Once we have the maintenance prediction, we can write a new `TelemetryOutput` message to Postgres which contains the prediction as well as an Event Hub.
+    Once we have the maintenance prediction, we can write a new `TelemetryOutput` message which contains the prediction to an Event Hub.
 
 5. In the Visual Studio Code terminal, enter the following commands.
 
     ```cmd
     dotnet add package Azure.Messaging.EventHubs
-    dotnet add package Npgsql
     dotnet restore
     dotnet build
     ```
@@ -1119,17 +983,13 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
     ![The option to deploy is selected.](media/code-function-deploy-check.png 'Deploy')
 
-9. To test the function, connect to your PostgreSQL instance with Azure Data Studio as you did in Task 2 and run the following query:
+9. To test the function, navigate to the `telemetry_to_score` Event Hub.  Ensure that you see incoming messages appear.
 
-    ```sql
-    SELECT * FROM event;
-    ```
+    ![Maintenance recommendations are coming in.](media/event-hub-messages.png 'Maintenance recommendations')
 
-    >**Note**: It may take 2-3 minutes for the new Azure Function to populate data into the **event** table. If you do not see data after several minutes, navigate to the Overview panel of the App Service and **Stop** and then **Start** the functions.
+    >**Note**: It may take 2-3 minutes for the new Azure Function to populate data into the **telemetry_to_score** Event Hub. If you do not see data after several minutes, navigate to the Overview panel of the App Service and **Stop** and then **Start** the functions.
 
-    ![Maintenance recommendations are coming in.](media/azure-data-studio-event-loading.png 'Maintenance recommendations')
-
-## Exercise 6:  Enrich event telemetry with automated anomaly detection
+## Exercise 5:  Enrich event telemetry with automated anomaly detection
 
 Duration: 15 minutes
 
@@ -1147,15 +1007,15 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     From there, select the **modernize-app** resource group.
 
-2. Navigate to the **modernize-app-stream** entry.
+2. Navigate to the **modernize-app-stream#SUFFIX#** entry.
 
-    ![In the modernize-app resource group, the Stream Analytics job is selected.](media/azure-stream-analytics-job.png 'Event Hubs Namespace')
+    ![In the modernize-app resource group, the Stream Analytics job is selected.](media/azure-stream-analytics-job.png 'Stream Analytics job')
 
 3. In the **Configure** menu, select **Storage account settings**. Then, on the Storage account settings page, select **Add storage account**.
 
     ![In the Configure menu, Storage account settings is selected, followed by the Add storage account option.](media/azure-stream-analytics-add-storage.png 'Add storage account')
 
-4. Choose the storage account you created before the hands-on lab, change the Authentication mode to **Connection string** and then select **Save**.
+4. Choose the storage account you created before the hands-on lab.  Ensure that the Authentication mode is set to **Connection string** and then select **Save**.
 
     ![In the Storage account settings menu, the appropriate storage account is selected.](media/azure-stream-analytics-add-storage-2.png 'Select storage account')
 
@@ -1163,7 +1023,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     ![In Stream Analytics job inputs, Event Hub is selected.](media/azure-stream-analytics-input-eventhub.png 'Event Hub')
 
-6. In the **New input** tab, name your input `telemetry` and choose the appropriate IoT Hub that you created before the lab.  Ensure that the Event Hub name is **telemetry_to_score**.  Change the Event Hub consumer group to **Use existing** and select **anomalydetection** from the list.  Set the **Authentication mode** to **Connection string** Leave the other settings at their default values and select **Save**.
+6. In the **New input** tab, name your input `telemetry` and choose the appropriate IoT Hub that you created before the lab.  Ensure that the Event Hub name is **telemetry_to_score**.  Change the Event Hub consumer group to **Use existing** and select **anomalydetection** from the list.  Ensure that the **Authentication mode** is set to **Connection string**. Leave the other settings at their default values and select **Save**.
 
    ![In the New input tab, form details are filled in.](media/azure-stream-analytics-input-eventhub-2.png 'Event Hub')
 
@@ -1248,7 +1108,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
         AND CAST(GetRecordPropertyValue(SpikeAndDipResult, 'Score') AS float)  < 0.001;
     ```
 
-    In the `RawData` common table expression, we parse the event data JSON to obtain the machine temperature.  We can use that temperature in the `AnomalyDetectionStep` common table expression to perform spike and dip analysis of temperature for anomalies.  We want to analyze temperature with a confidence of 80% or better and looking back at the last 60 data points over a five-minute period.  In the main query, we write data if Azure Cognitive Services deems a given result as anomalous and if its score is sufficiently low that we expect it not to be a false positive.  These anomalous results will be written into Cosmos DB for later processing.
+    In the `RawData` common table expression, we parse the event data JSON to obtain the machine temperature.  We can use that temperature in the `AnomalyDetectionStep` common table expression to perform spike and dip analysis of temperature for anomalies.  We want to analyze temperature with a confidence of 80% or better and looking back at the last 60 data points over a five-minute period.  In the main query, we write data if Azure Cognitive Services deems a given result as anomalous and if its score is sufficiently low that we expect it not to be a false positive. These anomalous results will be written into Cosmos DB for later processing.
 
 14. Select **Test query** to ensure that the queries run. You will see only the results of the last query in the Test results window and only the inputs and outputs you created in the Inputs and Outputs sections, respectively. If you want to see the results of a different query, highlight that query and select **Test selected query**.
 
@@ -1260,160 +1120,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     ![The Start option in the Overview page is selected.](media/azure-stream-analytics-start.png 'Start')
 
-## Exercise 7:  Send scored telemetry data to PostgreSQL
-
-Duration: 15 minutes
-
-Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you will enrich that data with automated anomaly detection by way of Azure Stream Analytics. The destination for this data will be the scored telemetry Cosmos DB container.
-
-### Task 1: Create an Azure Function to write temperature anomalies data to PostgreSQL
-
-1. Open Visual Studio Code and navigate to the folder you created in Exercise 4 for Azure Functions. In the Azure menu, navigate to the top-right corner and select **Create Function...**
-
-    ![Create Function is selected.](media/code-create-function.png 'Create Function')
-
-2. Fill in the following for each step of the function creation wizard.
-
-   | Step                             | Value                                              |
-   | -------------------------------- | ------------------------------------------         |
-   | Template                         | _select `Azure Cosmos DB trigger`_                 |
-   | Function Name                    | _`ProcessTemperatureAnomalyEvents`_                |
-   | Namespace                        | _`ModernApp`_                                      |
-   | Setting from local.settings.json | _select `modernizeapp_COSMOSDB`_                   |
-   | Database name                    | _`sensors`_                                        |
-   | Collection name                  | _`scored_telemetry`_                               |
-
-   ![The correct template is selected, indicating the first step in the process.](media/code-cosmosdb-trigger.png 'Cosmos DB Trigger')
-
-3. In the **ProcessTemperatureAnomalyEvents.cs** file, replace the existing code with the following.
-
-    ```csharp
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Azure.Documents;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Host;
-    using Microsoft.Extensions.Logging;
-    using Npgsql;
-
-    namespace ModernApp
-    {
-        public static class ProcessTemperatureAnomalyEvents
-        {
-            [FunctionName("ProcessTemperatureAnomalyEvents")]
-            public static void Run([CosmosDBTrigger(
-                databaseName: "sensors",
-                collectionName: "scored_telemetry",
-                ConnectionStringSetting = "modernizeapp_COSMOSDB",
-                LeaseCollectionName = "leases")]IReadOnlyList<Document> input, ILogger log)
-            {
-                foreach (Document doc in input) {
-                    // Deserialize the incoming document
-                    TelemetryOutput to = LoadTelemetryRecord(doc);
-
-                    // Write telemetry event to Postgres
-                    WriteTelemetryEventToPostgres(to);
-                }
-            }
-
-            public static TelemetryOutput LoadTelemetryRecord(Document doc)
-            {
-                TelemetryOutput to = new TelemetryOutput();
-                to.entity_id = doc.GetPropertyValue<string>("entity_id");
-                to.entity_type = doc.GetPropertyValue<string>("entity_type");
-                to.event_data = doc.GetPropertyValue<string>("event_data");
-                to.event_type = doc.GetPropertyValue<string>("event_type");
-                to.machineid = doc.GetPropertyValue<int>("machineid");
-                to.id = doc.GetPropertyValue<string>("id");
-
-                return to;
-            }
-
-            public static void WriteTelemetryEventToPostgres(TelemetryOutput to)
-            {
-                string insertCommand = @"INSERT INTO event(
-                    machine_id,
-                    event_id,
-                    event_type,
-                    entity_type,
-                    entity_id,
-                    event_data
-                )
-                VALUES
-                (
-                    @machine_id,
-                    @event_id,
-                    @event_type,
-                    @entity_type,
-                    @entity_id,
-                    CAST(@event_data AS json)
-                );";
-
-                // Connect to Postgres
-                var connStr = Environment.GetEnvironmentVariable("pg_connection");
-                using (var conn = new NpgsqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    using (var cmd = new NpgsqlCommand(insertCommand, conn))
-                    {
-                        cmd.Parameters.AddWithValue("machine_id", to.machineid);
-                        cmd.Parameters.AddWithValue("event_id", to.id);
-                        cmd.Parameters.AddWithValue("event_type", to.event_type);
-                        cmd.Parameters.AddWithValue("entity_type", to.entity_type);
-                        cmd.Parameters.AddWithValue("entity_id", to.entity_id);
-                        cmd.Parameters.AddWithValue("event_data", to.event_data);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-        }
-    }
-    ```
-
-    For this Azure function, the `Run()` method reads the `sensors.scored_telemetry` collection for new anomalies and writes these to Postgres.
-
-4. In the Visual Studio Code terminal, enter the following commands.
-
-    ```cmd
-    dotnet restore
-    dotnet build
-    ```
-
-    After running these commands, you should receive a message that the build succeeded.
-
-    ![The Azure Function built successfully.](media/code-function-build-succeeded.png 'Build succeeded.')
-
-### Task 2: Deploy and configure an Azure Function
-
-1. In Visual Studio Code, select the **Azure** menu option and navigate to **Functions**. Drill down into **Local Project** to **Functions** until you see the **ProcessTemperatureAnomalyEvents** function.
-
-    ![The Azure Function.](media/code-function-view.png 'ProcessTemperatureAnomalyEvents')
-
-2. Select the **ProcessTemperatureAnomalyEvents** function and then select the **Deploy to Function App...** operation. You may need to move the mouse to the top-right corner of the Functions tab to view this option.
-
-    ![Deploy to Function App is selected.](media/code-function-deploy.png 'Deploy to Function App...')
-
-3. Choose the Function App starting with **modernize-app** from the Function App list.
-
-    ![The appropriate Function App is selected.](media/code-function-deploy-app.png 'Select Function App in Azure')
-
-4. Select **Deploy** in the ensuing modal dialog.
-
-    ![The option to deploy is selected.](media/code-function-deploy-check.png 'Deploy')
-
-5. After deployment completes, return to Azure Data Studio and run the following query to confirm that temperature anomaly records have reached PostgreSQL.
-
-    ```sql
-    SELECT * FROM event WHERE event_type = 'Temperature Anomaly';
-    ```
-
-    ![Temperature anomaly data appears in PostgreSQL.](media/azure-data-studio-temperature-anomaly.png 'Temperature Anomaly')
-
-    >**Note**:  It may take 2-5 minutes for temperature anomalies to reach PostgreSQL.
-
-## Exercise 8: Modernize services logic to use event sourcing and CQRS
+## Exercise 6: Modernize services logic to use event sourcing and CQRS
 
 Duration: 15 minutes
 
@@ -1423,7 +1130,17 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
 
 1. In PowerShell, change your directory to `Hands-on lab\Resources\Microservices`.
 
-2. Run the following commands to build the docker containers, substituting the name of the container registry you created before the Hands-on Lab:
+2. Navigate to the Terminal and enter the following command:
+
+    ```powershell
+    docker login -u <USERNAME> -p "<PASSWORD>" <CONTAINER_REGISTRY>
+    ```
+
+    Enter appropriate values for username, password, and container registry URL.  You can find these on the **Access keys** menu of the Container registry you have created.
+
+    ![Log in to the Azure Container Repository account.](media/microservices-login.png 'Docker login')
+
+3. Run the following commands to build the docker containers, substituting the name of the container registry you created before the Hands-on Lab:
 
     ```powershell
     docker build -f .\SynapseInnovateMcwWebapp\Dockerfile -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-webapp .
@@ -1433,7 +1150,9 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
     docker build -f .\MetadataWrite\Dockerfile            -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-metadata-write .
     ```
 
-3. Run the following commands to push the containers to your container registry:
+    > **Note**:  If you receive an error when trying to build the `synapse-innovate-mcw-webapp` package reading "ERROR [internal] load build context" the reason is that the file path is too long for Windows to build the container image.  Move the `Microservices` folder to be the root directory on your drive and run the build process again.
+
+4. Run the following commands to push the containers to your container registry:
 
     ```powershell
     docker push <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-webapp
@@ -1489,8 +1208,10 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
           environmentVariables:
           - name: ASPNETCORE_URLS
             value: http://localhost:8081
-          - name: CITUS_CONNECTION_STRING
-            value: <PG_CONNECTION_STRING>
+          - name: COSMOS_DB_ACCOUNT_ENDPOINT
+            value: <COSMOS_ENDPOINT_URL>
+          - name: COSMOS_DB_AUTH_KEY
+            value: <COSMOS_PRIMARY_KEY>
   
       - name: metadataread
         properties:
@@ -1560,7 +1281,6 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
         | <CONTAINER_REGISTRY_URL>      | The url of the container registry you created before the Hands-on Lab.                                                                                                                                            |
         | <CONTAINER_REGISTRY_USERNAME> | The username of the container registry you created before the Hands-on Lab.                                                                                                                                       |
         | <CONTAINER_REGISTRY_PASSWORD> | The Primary Password of the container registry you created before the Hands-on Lab.                                                                                                                               |
-        | <PG_CONNECTION_STRING>        | `Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true` *(Replacing values where appropriate)* | 
         | <COSMOS_ENDPOINT_URL>         | Something like `https://modernize-app-#SUFFIX#.documents.azure.com:443/` |
         | <COSMOS_PRIMARY_KEY>          | The Primary Key of your Cosmos DB account.                                                                                                                                                                        |
 
@@ -1580,62 +1300,7 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
 
 3. You can navigate to the IP address in the table to visit the web app.
 
-### Task 4: Migrate the Change Feed Processor Function to a Container
-
-In a high-load production environment, instead of using an Azure Function to process our Cosmos DB Change Feed we could use a Kubernetes Pod in AKS. Because of new additions to the Cosmos DB SDK in version 3, the AKS pod could auto-scale in and out based on the volume of changes. For the sake of this lab though, we're just going to host it in our ACI Container Group.
-
-The business logic in our container will be nearly the same as in our Function from Exercise 5, Task 3. You can view the new code at `Hands-on lab/Resources/Microservices/ProcessTelemetryEventsContainer/ProcessTelemetryEvents.cs`.
-
-1. With `Hands-on lab\Resources\Microservices` as your working directory in PowerShell, run the following command (remembering to substitute the name of the container registry): 
-
-    ```powershell
-    docker build -f .\ProcessTelemetryEventsContainer\Dockerfile -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container .
-    ```
-
-2. Run the following command to push this container to your container registry as well: 
-
-    ```powershell
-    docker push <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container
-    ```
-
-3. In your `deploy-aci.yml` file add the following text right after the `queryservice` section (remembering to substitute your real values for the values in brackets):
-
-    ```yml
-      - name: processtelemetryeventscontainer
-        properties: 
-          image: <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container
-          resources:
-            requests:
-              cpu: 0.5
-              memoryInGb: 1.5
-          environmentVariables:
-            - name: COSMOS_DB_ACCOUNT_ENDPOINT
-              value: <COSMOS_ENDPOINT_URL>
-            - name: COSMOS_DB_AUTH_KEY
-              value: <COSMOS_PRIMARY_KEY>
-            - name: azureMLEndpointUrl
-              value: <AZURE_ML_ENDPOINT_URL>
-            - name: eventHubConnection
-              value: <EVENT_HUB_CONNECTION>
-            - name: eventHubName
-              value: <EVENT_HUB_NAME>
-            - name: pg_connection
-              value: <PG_CONNECTION>
-    ```
-
-4. Deploy your container group again with:
-
-    ```powershell
-    az container create --resource-group modernize-app --file .\deploy-aci.yaml
-    ```
-
-5. You can view the logs of your new container and verify it's running by executing this command: 
-
-    ```powershell
-    az container logs --resource-group modernize-app --name modernizeappmicroservices --container-name processtelemetryeventscontainer
-    ```
-
-## Exercise 9: View the factory status in a Power BI report
+## Exercise 7: View the factory status in a Power BI report
 
 Duration: 30 minutes
 
@@ -1670,7 +1335,7 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
    | Name                           | _`modernize_app_cosmos`_                           |
    | Account selection method       | _select `From Azure subscription`_                 |
    | Cosmos  DB account name        | _select the appropriate account_                   |
-   | Database name                  | _select `sensors`                                  |
+   | Database name                  | _select `sensors`_                                 |
 
    ![In the New linked service output, form field entries are filled in.](media/azure-synapse-cosmos-linked-service-2.png 'Azure Cosmos DB (SQL API) linked service form details')
 
@@ -1721,12 +1386,18 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
 
     >**Note**: it may take several minutes for a Spark session to start. The notebook cell output text will read "Starting Spark session" during this time.
 
-13. Below the first code block, select **+** and add a new code cell. Enter and then run the following code to create a new SQL Pool table with machine anomaly data.
+13. Below the first code block, select **+ Code** and add a new code cell. Enter and then run the following code to create a new SQL Pool table with machine anomaly data.
 
     ```scala
     // Ensure that this table does not already exist on your SQL Pool; otherwise, you will get an error!
     dfFlat.write.synapsesql("modernapp.dbo.MachineTelemetry", Constants.INTERNAL)
     ```
+
+    > **Note**:  you might receive the following error when executing this block.
+    >
+    > *org.apache.hadoop.fs.azurebfs.contracts.exceptions.AbfsRestOperationException: Operation failed: "This request is not authorized to perform this operation using this permission.", 403, HEAD*.
+    >
+    > If you do receive this error, it means that you are not the storage blob owner.  To fix this, navigate to the **modappadls#SUFFIX#** storage account and select **Access Control (IAM)** from the **Settings** menu.  Then, add the **Storage Blob Data Owner** role assignment to your user.  Wait a few minutes for this to propagate and you should be able to execute the above script.
 
 14. After the code segment completes, select **+** and add a new cell with the following code to ensure that the SQL pool has loaded correctly.
 

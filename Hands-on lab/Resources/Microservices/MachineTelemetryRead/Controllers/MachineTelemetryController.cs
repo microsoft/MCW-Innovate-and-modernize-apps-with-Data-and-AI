@@ -26,20 +26,20 @@ namespace MachineTelemetryRead.Controllers
             return (await _eventRepository.GetAllEventsAsync(limit, skip))
                 .Select(e =>
                 {
-                    var eventData = JsonSerializer.Deserialize<MachineTelemetryEventData>(e.EventData,
+                    var eventData = JsonSerializer.Deserialize<MachineTelemetryRead.Models.EventData>(e.Event_Data,
                         new JsonSerializerOptions
                         {
                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                         });
-                    
+
                     return new MachineTelemetryDto
                     {
                         Id = e.Id,
                         MachineId = e.MachineId,
-                        EventId = Guid.Parse(e.EventId),
-                        EventType = e.EventType,
-                        EntityType = e.EntityType,
-                        EntityId = Guid.Parse(e.EntityId),
+                        EventId = Guid.NewGuid(),
+                        EventType = e.Event_Type,
+                        EntityType = e.Entity_Type,
+                        EntityId = e.Entity_Id,
                         FactoryId = eventData.FactoryId,
                         Machine = new MachineData
                         {
@@ -52,7 +52,7 @@ namespace MachineTelemetryRead.Controllers
                             Temperature = eventData.Ambient.Temperature,
                             Humidity = eventData.Ambient.Humidity,
                         },
-                        TimeCreated = DateTime.Parse(eventData.TimeCreated),
+                        TimeCreated = eventData.TimeCreated
                     };
                 })
                 .ToList();

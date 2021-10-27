@@ -6,6 +6,6 @@ namespace MachineTelemetryRead.Interfaces
 {
     public interface IEventRepository
     {
-        Task<List<Event1>> GetAllEventsAsync(int limit, int skip);
+        Task<List<MachineTelemetry>> GetAllEventsAsync(int limit, int skip);
     }
 }

@@ -5,18 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="Models" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+      <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.22.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Common\Common.csproj" />
-    </ItemGroup>
-
 
 </Project>
