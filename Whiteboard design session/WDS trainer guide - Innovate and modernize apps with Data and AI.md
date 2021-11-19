@@ -18,7 +18,7 @@ Microsoft may have patents, patent applications, trademarks, copyrights, or othe
 
 The names of manufacturers, products, or URLs are provided for informational purposes only and Microsoft makes no representations and warranties, either expressed, implied, or statutory, regarding these manufacturers or the use of the products with any Microsoft technologies. The inclusion of a manufacturer or product does not imply endorsement of Microsoft of the manufacturer or product. Links may be provided to third party sites. Such sites are not under the control of Microsoft and Microsoft is not responsible for the contents of any linked site or any link contained in a linked site, or any changes or updates to such sites. Microsoft is not responsible for webcasting or any other form of transmission received from any linked site. Microsoft is providing these links to you only as a convenience, and the inclusion of any link does not imply endorsement of Microsoft of the site or the products contained therein.
 
-© 2020 Microsoft Corporation. All rights reserved.
+© 2021 Microsoft Corporation. All rights reserved.
 
 Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are property of their respective owners.
 
@@ -174,7 +174,7 @@ In this whiteboard design session, you will work with a group to design a soluti
 
 At the end of this whiteboard design session, you will have learned how to capture Internet of Things (IoT) device data with Azure IoT Hub, process device data with Azure Stream Analytics, apply the Command and Query Responsibility Segregation (CQRS) pattern with Azure Functions, build a predictive maintenance model using an Azure Machine Learning notebook, deploy the model to an Azure Machine Learning model registry, deploy the model to an Azure Container Instance, and generate predictions with Azure Functions accessing a Cosmos DB change feed.  These skills will help you modernize applications and integrate Artificial Intelligence into the application.
 
-## Step 1: Review the customer case study
+## Step 1: Review the customer case study 
 
 **Outcome**
 
@@ -182,13 +182,13 @@ Analyze your customer's needs.
 
 Timeframe: 15 minutes
 
-Directions:  With all participants in the session, the facilitator/SME presents an overview of the customer case study along with technical tips.
+Directions: With all participants in the session, the facilitator/SME presents an overview of the customer case study along with technical tips.
 
-1. Meet your table participants and trainer.
+1. Meet your team members and trainer.
 
-2. Read all of the directions for steps 1-3 in the student guide.
+2. Read all directions for steps 1-3 in the student guide.
 
-3. As a table team, review the following customer case study.
+3. As a team, review the following customer case study.
 
 ### Customer situation
 
@@ -196,7 +196,7 @@ Wide World Importers (WWI) is a global manufacturing company that handles distri
 
 WWI has five factories, each with about 10,000 sensors, for a total of approximately 50,000 sensors sending data in real-time. Today, their sensor data is collected into a Kafka cluster and processed via a custom consumer application that aggregates the events and writes the results to PostgreSQL. They have an event data store that currently runs in PostgreSQL. A web app connects to the data store and reports the status of the factory floor.
 
-WWI is running into scalability issues as they add manufacturing capacity, but in the course of addressing this concern, they would like to take the opportunity to modernize their infrastructure. In particular, they would like to modernize their solution to use microservices, and in particular, apply the Event Sourcing and Command and Query Responsibility Segregation (CQRS) patterns.
+WWI is running into scalability issues as they add manufacturing capacity, but in the course of addressing this concern, they would like to take the opportunity to modernize their infrastructure. In particular, they would like to modernize their solution to use microservices and apply the Event Sourcing and Command and Query Responsibility Segregation (CQRS) patterns.
 
 They recognize their solutions will benefit from the cloud and want to ensure that they can manage their hybrid solution in a consistent way across both cloud and on-premises resources. The factories currently collect and analyze their operational data independently. They would like to deploy a cloud-based platform to centralize and allow storage of all data across all factories.
 
@@ -204,7 +204,7 @@ They recognize their solutions will benefit from the cloud and want to ensure th
 
 1. We want to centralize our factory sensor data into the cloud, using PaaS services wherever possible.
 
-2. We want to replace our local installations of Apache Kafka with a service that does not require on-premises administrators.  Not all of our factories have dedicated Kafka administrators, which has led to avoidable data loss issues in the past.
+2. We want to replace our local installations of Apache Kafka with a service that does not require on-premises administrators.  Not all our factories have dedicated Kafka administrators, which has led to avoidable data loss issues in the past.
 
 3. The consumer group application we have built to process data from Kafka is our data pipeline bottleneck. When factory managers need to wait for information to come in, it typically is because the consumer group has fallen behind again.  We want a system that can keep up with the torrent of device data our sensors generate.
 
@@ -238,15 +238,15 @@ Timeframe: 60 minutes
 
 **Business needs**
 
-Directions: With all participants at your table, answer the following questions and list the answers on a flip chart:
+Directions: With your team, answer the following questions and be prepared to present your solution to others:
 
-1. Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
+1. Who will you present this solution to? Who is your target customer audience? Who are the decision makers?
 
 2. What customer business needs do you need to address with your solution?
 
 **Design**
 
-Directions: With all participants at your table, respond to the following questions on a flip chart:
+Directions: With your team, respond to the following questions:
 
 *High-level architecture*
 
@@ -288,18 +288,6 @@ Directions: With all participants at your table, respond to the following questi
 
 2. Which platform would you recommend for deploying the trained model?  This deployed model should still be part of an event sourcing solution.
 
-**Prepare**
-
-Directions: With all participants at your table:
-
-1. Identify any customer needs that are not addressed with the proposed solution.
-
-2. Identify the benefits of your solution.
-
-3. Determine how you will respond to the customer's objections.
-
-Prepare a 15-minute chalk-talk style presentation to the customer.
-
 ## Step 3: Present the solution
 
 **Outcome**
@@ -312,9 +300,9 @@ Timeframe: 30 minutes
 
 Directions:
 
-1. Pair with another table.
+1. Pair with another team.
 
-2. One table is the Microsoft team and the other table is the customer.
+2. One group is the Microsoft team and the other is the customer.
 
 3. The Microsoft team presents their proposed solution to the customer.
 
@@ -324,13 +312,13 @@ Directions:
 
 6. The customer team gives feedback to the Microsoft team.
 
-7. Tables switch roles and repeat Steps 2-6.
+7. Switch roles and repeat Steps 2-6.
 
 ## Wrap-up
 
 Timeframe: 15 minutes
 
-Directions: Tables reconvene with the larger group to hear the facilitator/SME share the preferred solution for the case study.
+Directions: Reconvene with the larger group to hear the facilitator/SME share the preferred solution for the case study.
 
 ## Additional references
 
@@ -360,19 +348,19 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Step 1: Review the customer case study
 
-- Check in with your table participants to introduce yourself as the trainer.
+- Check in with your participants to introduce yourself as the trainer.
 
 - Ask, "What questions do you have about the customer case study?"
 
 - Briefly review the steps and timeframes of the whiteboard design session.
 
-- Ready, set, go! Let the table participants begin.
+- Ready, set, go! Let participants begin.
 
 ## Step 2: Design a proof of concept solution
 
-- Check in with your tables to ensure that they are transitioning from step to step on time.
+- Check in with your teams to ensure that they are transitioning from step to step on time.
 
-- Provide some feedback on their responses to the business needs and design.
+- Provide feedback on their responses to the business needs and design.
 
   - Try asking questions first that will lead the participants to discover the answers on their own.
 
@@ -382,9 +370,9 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Step 3: Present the solution
 
-- Determine which table will be paired with your table before Step 3 begins.
+- Determine which groups will be paired together before Step 3 begins.
 
-- For the first round, assign one table as the presenting team and the other table as the customer.
+- For the first round, assign one group as the presenting team and the other as the customer.
 
 - Have the presenting team present their solution to the customer team.
 
@@ -396,7 +384,7 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Wrap-up
 
-- Have the table participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
+- Have participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
 
 ## Preferred target audience
 
@@ -424,7 +412,7 @@ The function sends the scored data to an Azure Event Hub. Another function that 
 
 ![The Function writes to Event Hub, were data is aggregated and anomaly detection occurs.  The results then are written to Cosmos DB.](media/architecture-diagram-3.png "Anomaly detection and writing to scored data")
 
-An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service, and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
+An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
 
 In a high-load production environment, instead of using an Azure Function to process our Cosmos DB Change Feed we could use a Kubernetes Pod in AKS. Because of new additions to the Cosmos DB SDK in version 3, the AKS pod could auto-scale in and out based on the volume of changes. Alternatively, you could host this in an Azure Container Instances container group for development or lower-throughput environments.
 
@@ -448,7 +436,7 @@ The web app is a modernized version of WWI's old monolithic web app, implementin
 
 3. Would you recommend SaaS or PaaS for this customer situation? What are the pros and cons of each?
 
-    Wide World Importers stated their interest in PaaS-based solutions that can handle managing and ingesting their existing IoT devices, and easily scale to support future growth as they bring more factories online. Azure IoT Hub's features meet the base requirements for their PoC, and can easily scale to manage and ingest telemetry from millions of devices. Since they already have staff on-hand who have IoT development and device management expertise, IoT Hub offers more advanced capabilities and flexibility to fit into their existing architecture as they transition to their new Azure-based architecture. Long-term, using IoT Hub for device management and ingest as an entry point into their custom event sourcing architecture is more cost-effective than using Azure IoT Central.
+    Wide World Importers stated their interest in PaaS-based solutions that can handle managing and ingesting their existing IoT devices, and easily scale to support future growth as they bring more factories online. Azure IoT Hub's features meet the base requirements for their PoC and can easily scale to manage and ingest telemetry from millions of devices. Since they already have staff on-hand who have IoT development and device management expertise, IoT Hub offers more advanced capabilities and flexibility to fit into their existing architecture as they transition to their new Azure-based architecture. Long-term, using IoT Hub for device management and ingest as an entry point into their custom event sourcing architecture is more cost-effective than using Azure IoT Central.
 
     There are some additional drawbacks to WWI using IoT Central, as with any SaaS-based solution. The primary drawback is limited flexibility because the underlying infrastructure is not customizable because its components are not exposed. WWI will need to find workarounds if ever their requirements change, and they need customization beyond what is provided by IoT Central's interface and SDK. Another limiting factor is how data is accessed. Although all the data is stored within a time-series data store, you only have access to it either through IoT Central's UI, which offers flexible filtering and visualizations, or by enabling continuous export of data to Azure Storage, Azure Event Hubs, or Azure Service Bus. You cannot directly query the datastore from an external application.
 
@@ -562,7 +550,7 @@ The web app is a modernized version of WWI's old monolithic web app, implementin
 
 4. How quickly could we add new sensors to this solution?  We have new manufacturing devices coming online and wish to expand the numbers of sensors on our existing devices, so we need a solution which will scale over time.
 
-    With the proposed solution, adding a new device or a new sensor means configuring the sensor to use Azure IoT Edge to communicate with the existing IoT Hub. All of the other pieces continue to work as expected with no additional development effort, and all of the Platform-as-a-Service solutions allow for scaling out over time as Wide World Importers further automates its business.
+    With the proposed solution, adding a new device or a new sensor means configuring the sensor to use Azure IoT Edge to communicate with the existing IoT Hub. All the other pieces continue to work as expected with no additional development effort, and all the Platform-as-a-Service solutions allow for scaling out over time as Wide World Importers further automates its business.
 
 ## Customer quote (to be read back to the attendees at the end)
 
