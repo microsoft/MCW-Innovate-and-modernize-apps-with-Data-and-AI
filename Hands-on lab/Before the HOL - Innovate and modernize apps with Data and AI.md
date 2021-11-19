@@ -31,7 +31,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using the Azure Portal](#task-1-create-an-azure-resource-group-using-the-azure-portal)
     - [Task 2: Deploy Azure resources](#task-2-deploy-azure-resources)
-    - [Task 3: Download the Hands-On Lab Contents](#task-3-download-the-hands-on-lab-contents)
+    - [Task 3: Download the hands-on lab contents](#task-3-download-the-hands-on-lab-contents)
 
 <!-- /TOC -->
 
@@ -108,15 +108,15 @@ The below ARM template deploys several Azure resources for the labs, including A
 
 3. Select the **Review + create** button, then **Create**. The provisioning of your deployment resources will take approximately 6 minutes.
 
-    > **Note**: You may experience a deployment step failing in regard to Role Assignment. This error may safely be ignored.
+    > **Note**: You may experience a deployment step failing regarding Role Assignment. This error may safely be ignored.
 
-### Task 3: Download the Hands-On Lab Contents
+### Task 3: Download the hands-on lab contents
 
 1. Read both steps of this task.  Once you have done that, scroll back to the top of this document and return to the top level of the repository.
 
     ![The link back to the top level of this workshop is selected.](media/github-top-level.png 'Microsoft Cloud Workshop')
 
-2. Select **Code** and then select **Download ZIP** to download a compressed archive file contents. This includes files in the **Hands-on lab\Resources** folder which will be necessary for the hands-on lab.
+2. Select **Code** and then select **Download ZIP** to download a compressed archive file content. This includes files in the **Hands-on lab\Resources** folder which will be necessary for the hands-on lab.
 
     ![The Download ZIP option is selected.](media/github-download-zip.png 'Download ZIP of Code')
 
