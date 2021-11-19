@@ -566,7 +566,7 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
 
 8. Change the timer trigger to `0 */1 * * * *`, which runs every 1 minute.
 
-    ![The cron job runs every minute.](media/code-function-cron.png, 'Create new timer trigger')
+    ![The cron job runs every minute.](media/code-function-cron.png 'Create new timer trigger')
 
 9. After entering the endpoint name, you may see a modal dialog which indicates that in order to debug, you must select a storage account. Choose **Select storage account** and then select the **modernappadls#SUFFIX#** account.
 
