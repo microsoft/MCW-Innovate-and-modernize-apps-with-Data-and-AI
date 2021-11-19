@@ -31,7 +31,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using the Azure Portal](#task-1-create-an-azure-resource-group-using-the-azure-portal)
     - [Task 2: Deploy Azure resources](#task-2-deploy-azure-resources)
-    - [Task 3: Download the hands-on lab contents](#task-3-download-the-hands-on-lab-contents)
+    - [Task 3: Download the hands-on lab content](#task-3-download-the-hands-on-lab-content)
 
 <!-- /TOC -->
 
@@ -110,7 +110,7 @@ The below ARM template deploys several Azure resources for the labs, including A
 
     > **Note**: You may experience a deployment step failing regarding Role Assignment. This error may safely be ignored.
 
-### Task 3: Download the hands-on lab contents
+### Task 3: Download the hands-on lab content
 
 1. Read both steps of this task.  Once you have done that, scroll back to the top of this document and return to the top level of the repository.
 
