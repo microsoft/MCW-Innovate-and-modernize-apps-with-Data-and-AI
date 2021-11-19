@@ -61,8 +61,8 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
     - [Task 2: Create a Power BI notebook](#task-2-create-a-power-bi-notebook)
     - [Task 3: Embed the Power BI notebook](#task-3-embed-the-power-bi-notebook)
   - [After the hands-on lab](#after-the-hands-on-lab)
-    - [Task 1: Delete Lab Resources](#task-1-delete-lab-resources)
-    - [Task 2:  Delete the Power BI Workspace](#task-2--delete-the-power-bi-workspace)
+    - [Task 1: Delete lab resources](#task-1-delete-lab-resources)
+    - [Task 2:  Delete the Power BI workspace](#task-2--delete-the-power-bi-workspace)
 
 <!-- /TOC -->
 
@@ -94,7 +94,7 @@ The function sends the scored data to an Azure Event Hub. Another function that 
 
 ![The Function writes to Event Hub, were data is aggregated and anomaly detection occurs.  The results then are written to Cosmos DB.](media/architecture-diagram-3.png "Anomaly detection and writing to scored data")
 
-An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service, and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
+An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
 
 ![Cosmos DB integrates with Azure Synpase Analytics via Synapse Link.](media/architecture-diagram-4.png "Azure Synapse Analytics interactions with Cosmos DB")
 
@@ -388,7 +388,7 @@ Before you begin streaming data, it is time to train and build a model to predic
 
     ![The stamp press model is selected.](media/azure-ml-endpoints.png 'Endpoints')
 
-5. In the stamp-press-model endpoint, observe the current state. If the Deployment state is **Transitioning** or **Unhealthy**, this means that Azure Machine Learning is still deploying the endpoint. Once the deployment state switches to **Healthy**, deployment succeeded and your Azure Machine Learning deployment is ready to be consumed.  It may take **up to 10 minutes** before the Deployment state is Healthy.
+5. In the stamp-press-model endpoint, observe the current state. If the Deployment state is **Transitioning** or **Unhealthy**, this means that Azure Machine Learning is still deploying the endpoint. Once the deployment state switches to **Healthy**, deployment succeeded, and your Azure Machine Learning deployment is ready to be consumed.  It may take **up to 10 minutes** before the Deployment state is Healthy.
 
     ![The stamp press model is deployed.](media/azure-ml-deployed.png 'Deployed model')
 
@@ -580,7 +580,7 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
 
     ```json
     "cosmosEndpointUrl": "https://modernize-app-#SUFFIX#.documents.azure.com:443/",
-    "cosmosPrimaryKey": "{ Your Comsos DB account's primary key }",
+    "cosmosPrimaryKey": "{ Your Cosmos DB account's primary key }",
     ```
 
     >**Note**: The Event Hub compatible endpoint can be found in the **Built-in endpoints** selection in the Settings menu for IoT Hub if you did not collect that information in Exercise 2.
@@ -955,7 +955,7 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
     The code in this function collects data from a specified Cosmos DB collection and writes it to an Event Hub.  The `Run()` method triggers every time a new entry is added to the Cosmos DB collection `sensors.telemetry`.  There can be more than one document per `Run()` call, so we need to process each one individually.  We first convert the Cosmos telemetry record into a `TelemetryOutput` and deserialize the event's `MessageBody`.
 
-    The next step is to call the Azure Machine Learning endpoint for the stamp press model.  This requires the machine temperature and pressure, which we can collect from the message.  We then call `GetMaintenancePrediction()` to make the HTTP request.  Azure Machine Learning returns back a list of predictions, but because we only sent one item's inputs, we expect to get only one result.
+    The next step is to call the Azure Machine Learning endpoint for the stamp press model.  This requires the machine temperature and pressure, which we can collect from the message.  We then call `GetMaintenancePrediction()` to make the HTTP request.  Azure Machine Learning returns a list of predictions, but because we only sent one item's inputs, we expect to get only one result.
 
     Once we have the maintenance prediction, we can write a new `TelemetryOutput` message which contains the prediction to an Event Hub.
 
@@ -1278,7 +1278,7 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
         | Field                         | Value                                                                                                                                                                                                             |
         | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
         | <REGION_CODE>                 | The region your resource group is hosted in, such as `eastus`. Review the results of `Get-AzureRmLocation \| Format-Table` if you are not sure. |
-        | <CONTAINER_REGISTRY_URL>      | The url of the container registry you created before the Hands-on Lab.                                                                                                                                            |
+        | <CONTAINER_REGISTRY_URL>      | The URL of the container registry you created before the Hands-on Lab.                                                                                                                                            |
         | <CONTAINER_REGISTRY_USERNAME> | The username of the container registry you created before the Hands-on Lab.                                                                                                                                       |
         | <CONTAINER_REGISTRY_PASSWORD> | The Primary Password of the container registry you created before the Hands-on Lab.                                                                                                                               |
         | <COSMOS_ENDPOINT_URL>         | Something like `https://modernize-app-#SUFFIX#.documents.azure.com:443/` |
@@ -1571,7 +1571,7 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
 
 Duration: 10 minutes
 
-### Task 1: Delete Lab Resources
+### Task 1: Delete lab resources
 
 1. Log into the [Azure Portal](https://portal.azure.com).
 
@@ -1591,7 +1591,7 @@ Duration: 10 minutes
 
     ![Confirm the resource group to delete.](media/azure-delete-resource-group-2.png 'Confirm resource group deletion')
 
-### Task 2:  Delete the Power BI Workspace
+### Task 2:  Delete the Power BI workspace
 
 1. Navigate to [Power BI](https://app.powerbi.com) and log in if prompted.
 
