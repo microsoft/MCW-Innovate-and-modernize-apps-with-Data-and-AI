@@ -1,16 +1,12 @@
-## Microsoft Cloud Workshops - Retirement Survey  
-
-As we look to streamline content and improve training, we are considering retiring the Microsoft Cloud Workshop (MCW) program. Please take a moment to fill out the [Microsoft Cloud Workshop Survey](https://forms.office.com/r/834zwtaNtK) and give us your feedback.
-
 # Innovate and modernize apps with Data and AI
 
 Wide World Importers (WWI) is a global manufacturing company that handles distribution worldwide. They manufacture more than 9,000 different SKUs for two types of businesses, B2B and B2C. WWI has 5 factories each with about 10,000 sensors each, meaning 50,000 sensors sending data in real time.
 
 Their sensor data is collected into a Kafka cluster, collected via a custom consumer application that aggregates the events and writes the results to PostgreSQL. They have an event data store that currently runs in PostgreSQL. The status of the factory floor is reported using a web app hosted on-premises that connects to PostgreSQL.
 
-They are running into scalability issues as they add manufacturing capacity, but in the course of addressing this concern they would like to take the opportunity to modernize their infrastructure. In particular, they would like to modernize their solution to use microservices, and in particular apply the Event Sourcing and Command Query Responsibility Segregation (CQRS) patterns.
+They are running into scalability issues as they add manufacturing capacity, but while addressing this concern they would like to take the opportunity to modernize their infrastructure. In particular, they would like to modernize their solution to use microservices and apply the Event Sourcing and Command Query Responsibility Segregation (CQRS) patterns.
 
-June 2021
+November 2021
 
 ## Target audience
 
@@ -33,15 +29,13 @@ At the end of this whiteboard design session, you will have learned how to captu
 
 ### Hands-on lab
 
-In this hands-on-lab, you will build a cloud processing and machine learning solution for IoT data. We will begin by deploying a factory load simulator using Azure IoT Edge to write into Azure IoT Hub, following the recommendations in the [Azure IoT reference architecture](https://docs.microsoft.com/azure/architecture/reference-architectures/iot).  The data in this simulator represents sensor data collected from a stamping press machine, which cuts, shapes, and imprints sheet metal.  The rest of the lab will show how to implement an event sourcing architecture using Azure technologies ranging from Cosmos DB to Stream Analytics to Azure Functions to Azure Database for PostgreSQL.
+In this hands-on lab, you will build a cloud processing and machine learning solution for IoT data. We will begin by deploying a factory load simulator which represents sensor data collected from a stamping press machine, which cuts, shapes, and imprints sheet metal.  The rest of the lab will show how to implement an event sourcing architecture using Azure technologies ranging from Cosmos DB to Stream Analytics to Azure Functions and more.
 
 Using factory-generated data, you will learn how to use the Anomaly Detection service built into Stream Analytics to observe and report on abnormal machine temperature readings.  You will also learn how to apply historical machine temperature and stamping pressure values in the creation of a machine learning model to identify potential issues which might require machine adjustment.  You will deploy this predictive maintenance model and generate predictions on simulated stamp press data.
 
 ## Azure services and related products
 
 - Azure Container Registry
-- Azure Virtual Machines with Linux
-- IoT Hub
 - Function App
 - Cosmos DB with Synapse Link
 - Azure Synapse Analytics
@@ -50,8 +44,7 @@ Using factory-generated data, you will learn how to use the Anomaly Detection se
 - Azure Kubernetes Service
 - Event Hubs
 - Azure Stream Analytics
-- Azure PostgreSQL Hyperscale
-- Power BI through Azure Synapse Analytics
+- Power BI
 
 ## Related references
 

@@ -1,15 +1,22 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 
-namespace Common.DTOs
+namespace MachineTelemetryRead.Models
 {
-    public class MachineTelemetryDto
+
+    public class MachineTelemetry
     {
         public Guid Id { get; set; }
         public int? MachineId { get; set; }
-        public Guid EventId { get; set; }
-        public string EventType { get; set; }
-        public string EntityType { get; set; }
-        public Guid EntityId { get; set; }
+        public Guid Event_Id { get; set; }
+        public string Event_Type { get; set; }
+        public string Entity_Type { get; set; }
+        public Guid Entity_Id { get; set; }
+        public string Event_Data { get; set; }
+    }
+
+    public class EventData
+    {
         public int FactoryId { get; set; }
         public MachineData Machine { get; set; }
         public MachineAmbientData Ambient { get; set; }
@@ -22,7 +29,6 @@ namespace Common.DTOs
         public double Pressure { get; set; }
         public double ElectricityUtilization { get; set; }
     }
-
     public class MachineAmbientData
     {
         public double Temperature { get; set; }

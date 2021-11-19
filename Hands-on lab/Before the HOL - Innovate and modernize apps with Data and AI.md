@@ -9,7 +9,7 @@ Before the hands-on lab setup guide
 </div>
 
 <div class="MCWHeader3">
-June 2021
+November 2021
 </div>
 
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
@@ -31,8 +31,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Task 1: Create an Azure resource group using the Azure Portal](#task-1-create-an-azure-resource-group-using-the-azure-portal)
     - [Task 2: Deploy Azure resources](#task-2-deploy-azure-resources)
-    - [Task 3: Provision an Ubuntu Virtual Machine](#task-3-provision-an-ubuntu-virtual-machine)
-    - [Task 4: Download the Hands-On Lab Contents](#task-4-download-the-hands-on-lab-contents)
+    - [Task 3: Download the hands-on lab content](#task-3-download-the-hands-on-lab-content)
 
 <!-- /TOC -->
 
@@ -54,15 +53,11 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
 
 3. Install [the Azure Machine Learning SDK for Python](https://docs.microsoft.com/python/api/overview/azure/ml/install?view=azure-ml-py).
 
-4. Install [Azure Data Studio](https://docs.microsoft.com/sql/azure-data-studio/download-azure-data-studio).
+4. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
 
-    - Install the [PostgreSQL extension](https://docs.microsoft.com/sql/azure-data-studio/postgres-extension).
+5. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
 
-5. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
-
-6. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
-
-7. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
+6. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
 
 ## Before the hands-on lab
 
@@ -107,90 +102,21 @@ The below ARM template deploys several Azure resources for the labs, including A
    - **Region**: The region where your Azure resources will be created.
 
    - **Unique Suffix**: This unique suffix will be used naming resources that will created as part of your deployment, such as your initials followed by the current date in YYYYMMDD format (ex. `jdh20210615`). Make sure you follow correct Azure [Resource naming](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging#resource-naming) conventions.
-   - **SQL Administrator Login Password**: Provide a strong password for the Azure Synapse Analytics dedicated SQL pool **and** PostgreSQL database user that will be created as part of your deployment. [Visit here](https://docs.microsoft.com/en-us/sql/relational-databases/security/password-policy?view=sql-server-ver15#password-complexity) to read about password rules in place. Your password will be needed during the lab. Make sure you have your password noted and secured.
+   - **SQL Administrator Login Password**: Provide a strong password for the Azure Synapse Analytics dedicated SQL pool login that will be created as part of your deployment. [Visit here](https://docs.microsoft.com/en-us/sql/relational-databases/security/password-policy?view=sql-server-ver15#password-complexity) to read about password rules in place. Your password will be needed during the lab. Make sure you have your password noted and secured.
 
    ![The form is configured as described.](media/synapse-arm-template.png "Deploy Azure resources")
 
 3. Select the **Review + create** button, then **Create**. The provisioning of your deployment resources will take approximately 6 minutes.
 
-    > **Note**: You may experience a deployment step failing in regard to Role Assignment. This error may safely be ignored.
+    > **Note**: You may experience a deployment step failing regarding Role Assignment. This error may safely be ignored.
 
-### Task 3: Provision an Ubuntu Virtual Machine
-
-In the hands-on lab, you will use an Ubuntu virtual machine to send sensor data.
-
-1. In the [Azure portal](https://portal.azure.com), type in "virtual machines" in the top search menu and then select **Virtual machines** from the results.
-
-    ![In the Services search result list, Virtual machines is selected.](media/azure-create-linux-vm-search.png 'Virtual machines')
-
-2. Select **+ Add** on the Virtual machines page and then select the **Virtual machine** option.
-
-3. In the **Basics** tab, complete the following:
-
-   | Field                          | Value                                              |
-   | ------------------------------ | ------------------------------------------         |
-   | Subscription                   | _select the appropriate subscription_              |
-   | Resource group                 | _select `modernize-app`_                           |
-   | Virtual machine name           | _`modernize-app-vm`_                               |
-   | Region                         | _select the resource group's location_             |
-   | Availability options           | _select `No infrastructure redundancy required`_   |
-   | Image                          | _select `Ubuntu Server 18.04 LTS - Gen1`_          |
-   | Azure Spot instance            | _leave unchecked_                                  |
-   | Size                           | _select `Standard_D2s_v3`_                         |
-   | Authentication type            | _select `SSH public key`_                          |
-   | Username                       | _select `iotuser`_                                 |
-   | SSH public key source          | _select `Generate new key pair`_                   |
-   | Key pair name                  | _select `modernize-app-vm_key`_                    |
-   | Public inbound ports           | _select `Allow selected ports`_                    |
-   | Select inbound ports           | _select `SSH (22)`_                                |
-
-   ![The form fields are completed with the previously described settings.](media/azure-create-linux-vm-1.png 'Create a virtual machine')
-
-4. Select **Review + create**. On the review screen, select **Create**.
-
-5. A modal dialog will appear to generate a new key pair.  Select **Download private key and create resource**. This will create the SSH key, and you will download a file named modernize-app-vm_key.pem.
-
-    ![Generate a new key pair.](media/azure-create-linux-vm-2.png 'Generate new key pair')
-
-6. Copy this private key to a location on your drive, such as `C:\Temp`. The private key must be accessible only to the current user, with no permissions for other users or groups. To accomplish this in Windows, right-click on the key and select **Properties**. On the **Security** tab, select **Advanced**.
-
-    ![How to set private key permissions is displayed.](media/azure-create-linux-vm-3.png 'Set private key permissions')
-
-7. In Advanced Security Settings, ensure that you are the owner. If not, select **Change** and change the owner to your account.
-
-8. In Advanced Security Settings, select **Disable inheritance** and select **Remove all inherited permissions from this object.** on the ensuing modal dialog.
-
-    ![Disable inheritance and remove inherited permissions.](media/azure-create-linux-vm-4.png 'Block Inheritance')
-
-9. In the Permissions tab on Advanced Security Settings, **Remove** any entries other than your user account.
-
-    ![Remove permission entries for all accounts other than your own.](media/azure-create-linux-vm-5.png 'Remove permission entries')
-
-10. If there is not already an entry for your account, select **Add** to add a new permission. Select **Select a principal** to add your account and then select **Full control** to give full control of the permissions file to your account. Then select **OK** for each open dialog to complete these changes.
-
-    ![Add permissions for your user account.](media/azure-create-linux-vm-6.png 'Add permissions')
-
-11. After the deployment succeeds, select the **Go to resource** button.
-
-12. In the **Settings** section on the menu, select **Connect** and then **SSH**.  This will provide instructions on how to connect to the VM, including the IP address you will use for the connection.
-
-    ![The example command to connect to your VM is selected.](media/azure-create-linux-vm-7.png 'Connect')
-
-13. If you are running Windows 10 version 1709 (Fall Creators Update) or later, Windows has a built-in `ssh` command. Run the following command to ensure that your SSH key is configured correctly. Be sure to change the private key location and IP address as needed.
-
-    `ssh -i #FILE_LOCATION#\modernize-app-vm_key.pem iotuser@#VM_IP_ADDRESS#`
-
-    > **Important:**  If you receive an error message which includes "WARNING: UNPROTECTED PRIVATE KEY FILE!", please ensure that you have completed the above steps and set file permissions for the private key.
-
-    > **Note:** If you are running a version of Windows which does not include built-in SSH support, you can use an [SSH client like PuTTY](https://docs.microsoft.com/azure/marketplace/partner-center-portal/create-azure-vm-technical-asset#connect-to-a-linux-based-vm) to connect to your virtual machine. If you are using Linux or MacOS, you should already have the `ssh` command installed. In that case, be sure to run `chmod 400 modernize-app-vm_key.pem` to set the file as read-only and accessible only to your user account before attempting to connect.
-
-### Task 4: Download the Hands-On Lab Contents
+### Task 3: Download the hands-on lab content
 
 1. Read both steps of this task.  Once you have done that, scroll back to the top of this document and return to the top level of the repository.
 
     ![The link back to the top level of this workshop is selected.](media/github-top-level.png 'Microsoft Cloud Workshop')
 
-2. Select **Code** and then select **Download ZIP** to download a compressed archive file contents. This includes files in the **Hands-on lab\Resources** folder which will be necessary for the hands-on lab.
+2. Select **Code** and then select **Download ZIP** to download a compressed archive file content. This includes files in the **Hands-on lab\Resources** folder which will be necessary for the hands-on lab.
 
     ![The Download ZIP option is selected.](media/github-download-zip.png 'Download ZIP of Code')
 

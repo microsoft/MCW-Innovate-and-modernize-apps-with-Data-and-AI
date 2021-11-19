@@ -35,44 +35,34 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/legal/intellec
   - [Before the hands-on lab](#before-the-hands-on-lab)
   - [Exercise 1: Finish configuring Azure services and retrieve values](#exercise-1-finish-configuring-azure-services-and-retrieve-values)
     - [Task 1: Copy Azure Container Registry access keys](#task-1-copy-azure-container-registry-access-keys)
-    - [Task 2: Copy Azure Database for PostgreSQL coordinator name](#task-2-copy-azure-database-for-postgresql-coordinator-name)
-    - [Task 3: Copy Event Hub connection string](#task-3-copy-event-hub-connection-string)
-  - [Exercise 2: Deploy a factory load simulator](#exercise-2-deploy-a-factory-load-simulator)
-    - [Task 1: Add a new device in IoT Hub](#task-1-add-a-new-device-in-iot-hub)
-    - [Task 2: Install and configure IoT Edge on a Linux virtual machine](#task-2-install-and-configure-iot-edge-on-a-linux-virtual-machine)
-    - [Task 3: Build and deploy an IoT Edge module](#task-3-build-and-deploy-an-iot-edge-module)
-  - [Exercise 3: Use Azure Machine Learning to train and register a predictive maintenance model](#exercise-3-use-azure-machine-learning-to-train-and-register-a-predictive-maintenance-model)
+    - [Task 2: Copy Event Hub connection string](#task-2-copy-event-hub-connection-string)
+  - [Exercise 2: Use Azure Machine Learning to train and register a predictive maintenance model](#exercise-2-use-azure-machine-learning-to-train-and-register-a-predictive-maintenance-model)
     - [Task 1: Load historical maintenance data](#task-1-load-historical-maintenance-data)
     - [Task 2: Create a new Azure Machine Learning Datastore](#task-2-create-a-new-azure-machine-learning-datastore)
     - [Task 3: Develop the predictive maintenance model](#task-3-develop-the-predictive-maintenance-model)
     - [Task 4: Deploy the predictive maintenance model](#task-4-deploy-the-predictive-maintenance-model)
     - [Task 5: Test the predictive maintenance model](#task-5-test-the-predictive-maintenance-model)
-  - [Exercise 4:  Create an Azure Function to send event telemetry to Cosmos DB](#exercise-4--create-an-azure-function-to-send-event-telemetry-to-cosmos-db)
+  - [Exercise 3:  Create an Azure Function to send event telemetry to Cosmos DB](#exercise-3--create-an-azure-function-to-send-event-telemetry-to-cosmos-db)
     - [Task 1: Enable Azure Synapse Link for Cosmos DB](#task-1-enable-azure-synapse-link-for-cosmos-db)
     - [Task 2: Create Cosmos DB containers](#task-2-create-cosmos-db-containers)
     - [Task 3: Create an Azure Function to write event data to Cosmos DB](#task-3-create-an-azure-function-to-write-event-data-to-cosmos-db)
     - [Task 4: Deploy and configure an Azure Function](#task-4-deploy-and-configure-an-azure-function)
-  - [Exercise 5:  Enrich event telemetry with predictive maintenance results](#exercise-5--enrich-event-telemetry-with-predictive-maintenance-results)
+  - [Exercise 4:  Enrich event telemetry with predictive maintenance results](#exercise-4--enrich-event-telemetry-with-predictive-maintenance-results)
     - [Task 1:  Create an Event Hub](#task-1--create-an-event-hub)
-    - [Task 2: Create an events table in PostgreSQL](#task-2-create-an-events-table-in-postgresql)
-    - [Task 3: Create an Azure Function based on a Cosmos DB trigger](#task-3-create-an-azure-function-based-on-a-cosmos-db-trigger)
-  - [Exercise 6:  Enrich event telemetry with automated anomaly detection](#exercise-6--enrich-event-telemetry-with-automated-anomaly-detection)
+    - [Task 2: Create an Azure Function based on a Cosmos DB trigger](#task-2-create-an-azure-function-based-on-a-cosmos-db-trigger)
+  - [Exercise 5:  Enrich event telemetry with automated anomaly detection](#exercise-5--enrich-event-telemetry-with-automated-anomaly-detection)
     - [Task 1: Start an Azure Stream Analytics job](#task-1-start-an-azure-stream-analytics-job)
-  - [Exercise 7:  Send scored telemetry data to PostgreSQL](#exercise-7--send-scored-telemetry-data-to-postgresql)
-    - [Task 1: Create an Azure Function to write temperature anomalies data to PostgreSQL](#task-1-create-an-azure-function-to-write-temperature-anomalies-data-to-postgresql)
-    - [Task 2: Deploy and configure an Azure Function](#task-2-deploy-and-configure-an-azure-function)
-  - [Exercise 8: Modernize services logic to use event sourcing and CQRS](#exercise-8-modernize-services-logic-to-use-event-sourcing-and-cqrs)
+  - [Exercise 6: Modernize services logic to use event sourcing and CQRS](#exercise-6-modernize-services-logic-to-use-event-sourcing-and-cqrs)
     - [Task 1: Build and push the containers](#task-1-build-and-push-the-containers)
     - [Task 2: Create a deployment file](#task-2-create-a-deployment-file)
     - [Task 3: Deploy the container group](#task-3-deploy-the-container-group)
-    - [Task 4: Migrate the Change Feed Processor Function to a Container](#task-4-migrate-the-change-feed-processor-function-to-a-container)
-  - [Exercise 9: View the factory status in a Power BI report](#exercise-9-view-the-factory-status-in-a-power-bi-report)
+  - [Exercise 7: View the factory status in a Power BI report](#exercise-7-view-the-factory-status-in-a-power-bi-report)
     - [Task 1: Import events data via a Spark notebook](#task-1-import-events-data-via-a-spark-notebook)
     - [Task 2: Create a Power BI notebook](#task-2-create-a-power-bi-notebook)
     - [Task 3: Embed the Power BI notebook](#task-3-embed-the-power-bi-notebook)
   - [After the hands-on lab](#after-the-hands-on-lab)
-    - [Task 1: Delete Lab Resources](#task-1-delete-lab-resources)
-    - [Task 2:  Delete the Power BI Workspace](#task-2--delete-the-power-bi-workspace)
+    - [Task 1: Delete lab resources](#task-1-delete-lab-resources)
+    - [Task 2:  Delete the Power BI workspace](#task-2--delete-the-power-bi-workspace)
 
 <!-- /TOC -->
 
@@ -92,11 +82,25 @@ The Innovate and modernize apps with Data and AI hands-on lab is an exercise tha
 
 ![High-level architecture, as described below.](media/architecture-diagram.png "High-level architecture")
 
-The solution begins with multiple IoT devices, located within multiple factories, that securely connect to Azure IoT Hub to send telemetry. IoT Hub provides IoT device management, telemetry ingest at high volume, and the ability to send commands to devices as needed. IoT Edge allows individual manufacturing machines to interact with IoT Hub by sending telemetry messages to IoT Hub and by ensuring that edge devices are running the latest versions of deployed modules. Telemetry from IoT Hub automatically triggers an Azure function, which processes the events, assigns a unique `entity_id`, and stores them in an Azure Cosmos DB telemetry container. The document TTL (time-to-live) is set to 30 days, after which time they will automatically expire. The data is replicated long-term to the analytical store with no TTL. The analytical store saves all transactional data in columnar storage as Parquet files in Azure storage in a cost-effective way, automatically. No ETL required. A different Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed for additional processing, including predictive maintenance scoring via a custom-trained Machine Learning model deployed to Azure Kubernetes Service (AKS) for real-time scoring. The function sends the scored data to an Azure Event Hub. Another function that consumes the change feed and saves the event data to domain entities, including state data, and stores them in Azure PostgreSQL Hyperscale (Citus). This database stores all sensor data as domain entities, partitioned by device Id, which the Hyperscale features uses to automatically shard the data for horizontal scaling and high performance reads and writes. An Azure Stream Analytics job reads the device telemetry, which includes the predictive maintenance prediction, and applies additional processing through a SQL-like query language. It uses an Azure Cognitive Services Anomaly Detector service to perform Changepoint and Spike-and-Dip anomaly detection. It also performs windowed aggregate queries against the time series data to create aggregates on machine maintenance predictions, grouped by maintenance requirement, factory, and machine. The temperature anomalies, telemetry with predictive maintenance scores, and temperature anomaly data is saved to another Azure Cosmos DB container, named `scored_telemetry`. Another Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed from the `scored_telemetry` container. It saves the anomaly detection, windowed aggregates, and scored predictive maintenance event data to domain entities, including state data, and writes them to Azure PostgreSQL.
+The solution begins with multiple IoT devices, located within multiple factories, that securely connect to Azure IoT Hub to send telemetry. IoT Hub provides IoT device management, telemetry ingest at high volume, and the ability to send commands to devices as needed. IoT Edge allows individual manufacturing machines to interact with IoT Hub by sending telemetry messages to IoT Hub and by ensuring that edge devices are running the latest versions of deployed modules. Telemetry from IoT Hub automatically triggers an Azure function, which processes the events, assigns a unique `entity_id`, and stores them in an Azure Cosmos DB telemetry container. The document TTL (time-to-live) is set to 30 days, after which time they will automatically expire. The data is replicated long-term to the analytical store with no TTL. The analytical store saves all transactional data in columnar storage in a cost-effective way, automatically, with no ETL required.
 
-An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service, and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
+![Data is pushed into IoT Hub, and then an Azure Function processes that data and writes it to Cosmos DB.](media/architecture-diagram-1.png "From IoT to Cosmos DB")
 
-The web app is a modernized version of WWI's old monolithic web app, implementing a microservices pattern through Docker containers deployed to Azure. The CQRS pattern is applied by separating create, update, and delete (CUD) commands from query (read) commands, issued by microservices deployed to different containers. The metadata command microservice, for example, issues CUD commands to the `metadata` Azure Cosmos DB container. Factory, machine, maintenance criteria, and other metadata are stored in this container. A query microservice issues read requests to read microservices for telemetry data stored in Azure PostgreSQL, and metadata stored in Azure Cosmos DB.
+A different Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed for additional processing, including predictive maintenance scoring via a custom-trained Machine Learning model deployed to Azure Kubernetes Service (AKS) for real-time scoring.
+
+![Another Azure Function performs telemetry scoring.](media/architecture-diagram-2.png "Predictive maintenance scoring")
+
+The function sends the scored data to an Azure Event Hub. Another function that consumes the change feed and saves the event data to domain entities, including state data. This database stores all sensor data as domain entities, partitioned by device Id, which the Hyperscale features uses to automatically shard the data for horizontal scaling and high performance reads and writes. An Azure Stream Analytics job reads the device telemetry, which includes the predictive maintenance prediction, and applies additional processing through a SQL-like query language. It uses an Azure Cognitive Services Anomaly Detector service to perform Changepoint and Spike-and-Dip anomaly detection. It also performs windowed aggregate queries against the time series data to create aggregates on machine maintenance predictions, grouped by maintenance requirement, factory, and machine. The temperature anomalies, telemetry with predictive maintenance scores, and temperature anomaly data is saved to another Azure Cosmos DB container, named `scored_telemetry`. Another Azure function implements event sourcing by triggering off the Azure Cosmos DB change feed from the `scored_telemetry` container. It saves the anomaly detection, windowed aggregates, and scored predictive maintenance event data to domain entities, including state data, and writes them to Cosmos DB.
+
+![The Function writes to Event Hub, were data is aggregated and anomaly detection occurs.  The results then are written to Cosmos DB.](media/architecture-diagram-3.png "Anomaly detection and writing to scored data")
+
+An Azure Synapse Analytics workspace securely connects to Azure Cosmos DB through a linked service and uses the Synapse Link feature to access both the transactional store (OLTP) and analytical store (OLAP) of each Azure Cosmos DB container. The analytical store is optimized for read-heavy queries, which do not consume Azure Cosmos DB resource units (RUs), as opposed to reading the transactional store. All raw historical event data is accessible through the analytical store, which serves as the data lake, but with no ETL requirements. Synapse Spark notebooks read the analytical store to perform Machine Learning model training and deployments through Azure Machine Learning, data exploration, and batch scoring. Synapse pipelines are used for batch processing at scale over data fed into the analytical store from IoT devices originating from all factories. Wide World Importers data analysts use the Power BI integration capabilities of Synapse Analytics to create reports against Synapse Serverless views that display data from the analytical stores, as well as data stored in the SQL Pools. These reports are also embedded in the web application, making them available to end-users who do not have access to the Synapse Analytics workspace or Power BI online.
+
+![Cosmos DB integrates with Azure Synpase Analytics via Synapse Link.](media/architecture-diagram-4.png "Azure Synapse Analytics interactions with Cosmos DB")
+
+The web app is a modernized version of WWI's old monolithic web app, implementing a microservices pattern through Docker containers deployed to Azure. The CQRS pattern is applied by separating create, update, and delete (CUD) commands from query (read) commands, issued by microservices deployed to different containers. The metadata command microservice, for example, issues CUD commands to the `metadata` Azure Cosmos DB container. Factory, machine, maintenance criteria, and other metadata are stored in this container. A query microservice issues read requests to read microservices for telemetry and metadata from Azure Cosmos DB.
+
+![A Microservices-based application architecture interacts with Cosmos DB.](media/architecture-diagram-5.png "Microservices")
 
 ## Requirements
 
@@ -114,15 +118,11 @@ The web app is a modernized version of WWI's old monolithic web app, implementin
 
 3. Install [the Azure Machine Learning SDK for Python](https://docs.microsoft.com/python/api/overview/azure/ml/install?view=azure-ml-py).
 
-4. Install [Azure Data Studio](https://docs.microsoft.com/sql/azure-data-studio/download-azure-data-studio).
+4. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
 
-    - Install the [PostgreSQL extension](https://docs.microsoft.com/sql/azure-data-studio/postgres-extension).
+5. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
 
-5. Install Docker. [Docker Desktop](https://www.docker.com/products/docker-desktop) will work for this hands-on lab and supports Windows and MacOS. For Linux, install the Docker engine through your distribution's package manager.
-
-6. Install [Power BI Desktop](https://aka.ms/pbidesktopstore).
-
-7. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
+6. Install the latest version of [the .NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1).
 
 ## Before the hands-on lab
 
@@ -146,29 +146,11 @@ The container registry will store container images you will create during the ha
 
     From there, select the **modernize-app** resource group.
 
-6. In the **Settings** section on the menu, select **Access keys**.  Then, on the Access keys page, **Enable** the Admin user.
+2. Navigate to the **Container registry** named **modernizeapp#SUFFIX#**.  In the **Settings** section on the menu, select **Access keys**.  Then, on the Access keys page, **Enable** the Admin user.
 
     ![The Admin user is enabled for the container registry.](media/azure-create-container-registry-2.png 'Container registry Access keys')
 
-### Task 2: Copy Azure Database for PostgreSQL coordinator name
-
-In this task, you will deploy a new Azure Database for PostgreSQL, selecting the Hyperscale (Citus) option.
-
-1. Navigate back to the lab resource group and select the Azure Database for PostgreSQL server group.
-
-   ![The Azure Database for PostgreSQL server group is highlighted.](media/azure-create-postgres-5.png 'Resource Group')
-
-2. Copy the **Coordinator name** to the clipboard.  Record this information for later use.
-
-    ![The overview page shows the Coordinator name value after deployment is complete.](media/azure-create-postgres-3.png 'Coordinator name')
-
-3. Select **Networking** in the left-hand menu underneath Settings. In the Firewall rules blade, select **Yes** to *allow Azure services and resources to access this server group*.
-
-   ![The Firewall rules blade is displayed.](media/azure-create-postgres-6.png 'Firewall rules')
-
-4. Select **Save** to apply the new firewall rule.
-
-### Task 3: Copy Event Hub connection string
+### Task 2: Copy Event Hub connection string
 
 1. Navigate back to the lab resource group and select the Event Hubs Namespace.
 
@@ -182,524 +164,11 @@ In this task, you will deploy a new Azure Database for PostgreSQL, selecting the
 
     ![The primary connection string is selected.](media/azure-event-hub-connection-string.png 'Connection String - Primary Key')
 
-## Exercise 2: Deploy a factory load simulator
+## Exercise 2: Use Azure Machine Learning to train and register a predictive maintenance model
 
 Duration: 40 minutes
 
-[Azure IoT Hub](https://azure.microsoft.com/services/iot-hub/) is a Microsoft offering which provides secure and reliable communication between IoT devices and cloud services in Azure. The aim of this service is to provide bidirectional communication at scale. The core focus of many industrial companies is not on cloud computing; therefore, they do not necessarily have the personnel skilled to provide guidance and to stand up a reliable and scalable infrastructure for an IoT solution. It is imperative for these types of companies to enter the IoT space not only for the cost savings associated with remote monitoring, but also to improve safety for their workers and the environment.
-
-Wide World Importers is one such company that could use a helping hand entering the IoT space.  They have an existing suite of sensors and on-premises data collection mechanisms at each factory but would like to centralize data in the cloud. To achieve this, we will stand up a IoT Hub and assist them with the process of integrating existing sensors with IoT Hub via [Azure IoT Edge](https://azure.microsoft.com/services/iot-edge/). A [predictable cost model](https://azure.microsoft.com/pricing/details/iot-hub/) also ensures that there are no financial surprises.
-
-### Task 1: Add a new device in IoT Hub
-
-The first task is to register a new IoT Edge device in IoT Hub.
-
-1. Navigate to the **modernize-app** resource group in the [Azure portal](https://portal.azure.com).
-
-    ![The resource group named modernize-app is selected.](media/azure-modernize-app-rg.png 'The modernize-app resource group')
-
-    If you do not see the resource group in the Recent resources section, type in "resource groups" in the top search menu and then select **Resource groups** from the results.
-
-    ![In the Services search result list, Resource groups is selected.](media/azure-resource-group-search.png 'Resource groups')
-
-    From there, select the **modernize-app** resource group.
-
-2. Navigate to the IoT Hub you created. The name will start with **modernize-app-iot** and have a Type of **IoT Hub**.
-
-3. In the Automatic Device Management menu, select **IoT Edge**. Then select the **+ Add an IoT Edge device** button to register a new device.
-
-    ![In the IoT Hub menu, IoT Edge is selected, followed by Add an IoT Edge device.](media/azure-add-iot-edge-device.png 'Add an IoT Edge device')
-
-4. In the Create a device menu, name the device `modernize-app-ubuntu1` and leave the remaining settings the same.
-
-    ![In the Create a device menu, the device ID is filled in.](media/azure-create-iot-edge-1.png 'Create a device')
-
-5. Select **Save** to complete device registration.
-
-6. Select the device named `modernize-app-ubuntu1`.
-
-    ![In the IoT Edge devices section, the device named modernize-app-ubuntu1 is selected.](media/azure-modernize-app-ubuntu1.png 'The modernize-app-ubuntu1 IoT device')
-
-7. On the modernize-app-ubuntu1 screen, copy the **Primary Connection String** and paste it into Notepad or another text editor. You will use this connection string in the next task, when configuring a Linux virtual machine to become `modernize-app-ubuntu1`.
-
-    ![In the modernize-app-ubuntu1 settings, the copy action for the Primary Connection String is selected.](media/azure-modernize-app-ubuntu1-cs.png 'The primary connection string for the modernize-app-ubuntu1 IoT device')
-
-8. Select **Built-in endpoints** from the Settings menu and navigate to the **Event Hub compatible endpoint** section. Copy the Event Hub-compatible endpoint and paste it into Notepad or another text editor. You will use this endpoint in Exercise 4.
-
-    ![In the Event Hub compatible endpoint settings, the endpoint connection string is selected.](media/azure-iot-hub-endpoint.png 'The Event Hub-compatible endpoint')
-
-9. In the Consumer Groups section, add a new consumer group named **telemetry** by entering the name into the **Create new consumer group** textbox.  IoT Hub will automatically save and register this consumer group, which we will use in Exercise 4.
-
-    ![In the Event Hub Consumer Groups settings, a new telemetry consumer group is added.](media/azure-iot-hub-consumer-group.png 'Consumer Groups')
-
-### Task 2: Install and configure IoT Edge on a Linux virtual machine
-
-The instructions in this task come from the guide on [how to install IoT Edge on Linux](https://docs.microsoft.com/azure/iot-edge/how-to-install-iot-edge-linux). The instructions in this task are tailored specifically for Ubuntu Server 18.04, but if you wish to install IoT Edge on other variants of Linux, including Rasbian for the Raspberry Pi, the linked article will provide additional support.
-
-1. Use SSH to connect to the virtual machine you configured before the hands-on lab. If you do not have the IP address of the virtual machine, navigate to the **modernize-app** resource group and search for the name **modernize-app-vm** with a Type of **Virtual machine**.
-
-    ![The virtual machine named modernize-app-vm is selected.](media/azure-modernize-app-vm.png 'The modernize-app-vm virtual machine')
-
-    The public IP address will be visible on the Overview page for the virtual machine. Connect to this IP address using your private key and the built-in `ssh` command in Windows 10 version 1709 or later, Linux, and MacOS; or PuTTY on any version of Windows.
-
-    ![Connection to the virtual machine over SSH was successful.](media/vm-ssh.png 'Connected to the Ubuntu-based virtual machine with SSH')
-
-2. Run the following commands to register the Microsoft key and software repository feed, copy the generated list into `sources.list.d`, and install the Microsoft GPG public key.
-
-    ```bash
-    curl https://packages.microsoft.com/config/ubuntu/18.04/multiarch/prod.list > ./microsoft-prod.list
-    sudo cp ./microsoft-prod.list /etc/apt/sources.list.d/
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-    sudo cp ./microsoft.gpg /etc/apt/trusted.gpg.d/
-    ```
-
-3. Update the APT package list and install the Moby engine and command-line interface.
-
-    ```bash
-    sudo apt-get update
-    sudo apt-get install -y moby-engine
-    sudo apt-get install -y moby-cli
-    ```
-
-    ![The Moby engine and command-line interface are installed.](media/vm-install-moby.png 'Moby engine and command-line interface')
-
-4. Install the latest version of Azure IoT Edge.
-
-    ```bash
-    sudo apt-get update
-    sudo apt-get install -y iotedge
-    ```
-
-    ![Azure IoT Edge is installed.](media/vm-install-iot-edge.png 'Azure IoT Edge security daemon')
-
-5. As the console message at the end of step 4 indicates, we will need to modify a configuration file. The configuration file is read-only by default, so you will need to use `chmod` to make it writable. Then, using a text editor like `vim` or `nano`, modify the configuration file.
-
-    ```bash
-    sudo chmod +w /etc/iotedge/config.yaml
-    sudo vim /etc/iotedge/config.yaml
-    ```
-
-    Inside the configuration file, scroll down to the lines labeled:
-
-    ```bash
-    # Manual provisioning configuration
-    provisioning:
-        source: "manual"
-        device_connection_string: "<ADD DEVICE CONNECTION STRING HERE>"
-    ```
-
-    Replace the **<ADD DEVICE CONNECTION STRING HERE>** text with the connection string you copied in the prior task.  In vim, use the arrow keys to move the cursor to the point before the angle bracket `<` and then type `35x` to delete the next 35 characters, leaving you with an empty pair of quotation marks. Then, type `i` to insert, paste in your text by right-clicking the screen (if supported) or `Shift+Insert`. Once you have your connection string pasted into the editor, press `Esc` to exit insert mode and type `ZZ` to save the file.
-
-    >**Note**: `vim` is one editor you may use to modify files in Linux, but there are others, including `nano`.  Choose the one you are most comfortable using.
-
-    ![Azure IoT Edge is configured.](media/vm-configure-iot-edge.png 'Azure IoT Edge device configuration')
-
-6. Restart the IoT Edge service.
-
-    ```bash
-    sudo systemctl restart iotedge
-    ```
-
-    To confirm that this worked successfully, return to the modernize-app-ubuntu1 device in IoT Hub and you should see a runtime response of **417 -- The device's deployment configuration is not set** within one to two minutes. You may need to select **Refresh** to update the page.
-
-    ![Azure IoT Edge configuration succeeded.](media/vm-configure-iot-edge-success.png 'Azure IoT Edge device configuration succeeded')
-
-    Although the runtime response reports an error message, this is a good result--the 417 error message indicates that we have not installed any IoT Edge modules on the device, and that is what we will do in the next task.
-
-### Task 3: Build and deploy an IoT Edge module
-
-1. Open Visual Studio Code. Navigate to the **Command Palette** by selecting it from the View menu, or by pressing `Ctrl+Shift+P`. Select the option **Azure IoT Edge: New IoT Edge Solution**. If you do not see it, begin typing "Azure IoT Edge" and it should appear.
-
-    > **Note**: If you do not see anything in the Command Palette for Azure IoT Edge, be sure to install the [Azure IoT Tools extension](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools) for Visual Studio Code.
-
-    ![Create a new IoT Edge Solution.](media/code-iot-edge-solution.png 'Azure IoT Edge: New IoT Edge Solution')
-
-2. Select a folder for your IoT Edge solution, such as `C:\Temp\IoT Edge`. When you have created or found a suitable folder, select **Select Folder**.
-
-    ![The IoT Edge folder location is selected.](media/code-iot-edge-select-folder.png 'Select Folder')
-
-3. Enter `WWIFactorySensors` as the name for your solution.
-
-    ![Name a new IoT Edge Solution.](media/code-iot-edge-name.png 'Azure IoT Edge: Provide a Solution Name')
-
-4. In the Select Module Template menu, choose **C# Module**.
-
-    ![The C# module template is selected.](media/code-iot-edge-csharp.png 'Select Module Template')
-
-5. In the Provide a Module Name menu, enter `WWIFactorySensorModule` for the name.
-
-    ![Name a new IoT Edge module.](media/code-iot-edge-module-name.png 'Azure IoT Edge: Provide a Module Name')
-
-6. Provide the location of your Azure Container Registry instance.
-
-    ![The Azure Container Registry location is filled in, along with the module name.](media/code-iot-edge-registry.png 'Azure IoT Edge: Provide a Docker Image Repository')
-
-    If you do not know the public address of your Azure Container Registry instance, navigate to the **modernize-app** resource group in the [Azure portal](https://portal.azure.com). From there, select the resource of type **Container registry**.
-
-    ![Name a new IoT Edge module.](media/code-iot-edge-cr-location.png 'Azure IoT Edge: Provide a Module Name')
-
-    Copy the **Login server** and replace `localhost:5000` with this address.
-
-    ![Name a new IoT Edge module.](media/code-iot-edge-cr-name.png 'Azure IoT Edge: Provide a Module Name')
-
-7. Install any required assets to build the factory sensor solution by selecting **Yes** to the following prompt.
-
-    ![The Yes option is selected when prompted about adding required assets.](media/code-iot-edge-assets.png 'Required assets to build and debug are missing')
-
-8. Open the `.env` file and ensure that the container registry username and password are correct.
-
-    ![Ensure that the container username and password are correct for the selected registry.](media/code-iot-edge-env.png '.env')
-
-    If you are not sure what the values should be, navigate to the container registry and then select **Access keys** from the Settings menu.
-
-    ![The username and password are selected in the Access keys page for the container registry.](media/code-iot-edge-password.png 'Container registry access keys')
-
-9. Replace the contents of **deployment.template.json** and **deployment.debug.template.json** with the following JSON. Replace the **modernizeapp** on lines 14, 15, and 16 with the name of your container registry.
-
-    ```json
-    {
-    "$schema-template": "2.0.0",
-    "modulesContent": {
-        "$edgeAgent": {
-        "properties.desired": {
-            "schemaVersion": "1.0",
-            "runtime": {
-            "type": "docker",
-            "settings": {
-                "minDockerVersion": "v1.25",
-                "loggingOptions": "",
-                "registryCredentials": {
-                "modernizeapp": {
-                    "username": "$CONTAINER_REGISTRY_USERNAME_modernizeapp",
-                    "password": "$CONTAINER_REGISTRY_PASSWORD_modernizeapp",
-                    "address": "modernizeapp.azurecr.io"
-                }
-                }
-            }
-            },
-            "systemModules": {
-            "edgeAgent": {
-                "type": "docker",
-                "settings": {
-                "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
-                "createOptions": {}
-                }
-            },
-            "edgeHub": {
-                "type": "docker",
-                "status": "running",
-                "restartPolicy": "always",
-                "settings": {
-                "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
-                "createOptions": {
-                    "HostConfig": {
-                    "PortBindings": {
-                        "5671/tcp": [
-                        {
-                            "HostPort": "5671"
-                        }
-                        ],
-                        "8883/tcp": [
-                        {
-                            "HostPort": "8883"
-                        }
-                        ],
-                        "443/tcp": [
-                        {
-                            "HostPort": "443"
-                        }
-                        ]
-                    }
-                    }
-                }
-                }
-            }
-            },
-            "modules": {
-            "WWIFactorySensorModule": {
-                "version": "1.0.1",
-                "type": "docker",
-                "status": "running",
-                "restartPolicy": "always",
-                "settings": {
-                "image": "${MODULES.WWIFactorySensorModule}",
-                "createOptions": {}
-                }
-            }
-            }
-        }
-        },
-        "$edgeHub": {
-        "properties.desired": {
-            "schemaVersion": "1.0",
-            "routes": {
-            "WWIFactorySensorModuleToIoTHub": "FROM /messages/modules/WWIFactorySensorModule/outputs/* INTO $upstream"
-            },
-            "storeAndForwardConfiguration": {
-            "timeToLiveSecs": 7200
-            }
-        }
-        }
-    }
-    }
-    ```
-
-10. Open the **modules\WWIFactorySensorModule** folder and open **module.json**. Ensure that the **repository** in line 5 is correct.
-
-    ![The repository for module.json is selected.](media/code-iot-edge-module-json.png 'module.json')
-
-11. Open the **Program.cs** file. Replace its contents with the following code.
-
-    ```csharp
-    namespace WWIFactorySensorModule
-    {
-        using System;
-        using System.IO;
-        using System.Runtime.InteropServices;
-        using System.Runtime.Loader;
-        using System.Security.Cryptography.X509Certificates;
-        using System.Text;
-        using System.Threading;
-        using System.Threading.Tasks;
-        using Microsoft.Azure.Devices.Client;
-        using Microsoft.Azure.Devices.Client.Transport.Mqtt;
-
-        using System.Collections.Generic;
-        using Microsoft.Azure.Devices.Shared;
-        using Newtonsoft.Json;
-        using Newtonsoft.Json.Linq;
-
-        public class Program
-        {
-            // Each message sent to IoT Hub will have this shape
-            class MessageBody
-            {
-                public int factoryId {get; set;}
-                public Machine machine {get;set;}
-                public Ambient ambient {get; set;}
-                public string timeCreated {get; set;}
-            }
-            class Machine
-            {
-                public int machineId {get; set;}
-                public double temperature {get; set;}
-                public double pressure {get; set;}
-                public double electricityUtilization {get; set;}
-            }
-            class Ambient
-            {
-                public double temperature {get; set;}
-                public int humidity {get; set;}
-            }
-
-            public int Interval { get; private set; }
-            public string OutputChannelName { get; private set; }
-
-            static async Task Main(string[] args)
-            {
-                var module = new Program();
-                await module.Run();
-            }
-
-            public async Task Run()
-            {
-                var cancellationTokenSource = new CancellationTokenSource();
-                // Unloading assembly or Ctrl+C will trigger cancellation token
-                AssemblyLoadContext.Default.Unloading += (ctx) => cancellationTokenSource.Cancel();
-                Console.CancelKeyPress += (sender, cpe) => cancellationTokenSource.Cancel();
-
-                try
-                {
-                    // Use an environment variable or the defaults
-                    Interval = 5000; // Generate a new message every 5 seconds.
-                    int interval;
-                    if (Int32.TryParse(Environment.GetEnvironmentVariable("Interval"), out interval))
-                        Interval = interval;
-                    OutputChannelName = Environment.GetEnvironmentVariable("OutputChannelName") ?? "output1";
-
-                    MqttTransportSettings mqttSetting = new MqttTransportSettings(TransportType.Mqtt_Tcp_Only);
-                    ITransportSettings[] settings = { mqttSetting };
-
-                    // Open a connection to the Edge runtime
-                    using (var moduleClient = await ModuleClient.CreateFromEnvironmentAsync(settings))
-                    {
-                        await moduleClient.OpenAsync(cancellationTokenSource.Token);
-                        Console.WriteLine("IoT Hub module client initialized.");
-
-                        await moduleClient.SetDesiredPropertyUpdateCallbackAsync(DesiredPropertyUpdateHandler, moduleClient, cancellationTokenSource.Token);
-
-                        // Fire the DesiredPropertyUpdateHandler manually to read initial values
-                        var twin = await moduleClient.GetTwinAsync();
-                        await DesiredPropertyUpdateHandler(twin.Properties.Desired, moduleClient);
-
-                        Random rand = new Random();
-                        while (!cancellationTokenSource.IsCancellationRequested)
-                        {
-                            // Generate new data to send as a message
-                            var msg = GenerateNewMessage(rand);
-                            var messageString = JsonConvert.SerializeObject(msg);
-                            var messageBytes = Encoding.UTF8.GetBytes(messageString);
-
-                            await moduleClient.SendEventAsync(OutputChannelName, new Message(messageBytes));
-                            await Task.Delay(Interval, cancellationTokenSource.Token);
-                        }
-                    }
-                }
-                catch (TaskCanceledException)
-                {
-                    Console.WriteLine("Asynchronous operation cancelled.");
-                }
-
-                Console.WriteLine("IoT Hub module client exiting.");
-            }
-
-            // Simulate factory activity to create a new message
-            private MessageBody GenerateNewMessage(Random rand)
-            {
-                // This sensor will be attached to machine 12345
-                var machine = new Machine { machineId = 12345 };
-                // Create values for temperature, stamp pressure, and electricity utilization
-                machine.temperature = GenerateDoubleValue(rand, 55.0, 2.4);
-                machine.pressure = GenerateDoubleValue(rand, 7539, 14);
-                machine.electricityUtilization = GenerateDoubleValue(rand, 29.36, 1.1);
-
-                // This represents conditions around the stamp press: the current temperature and humidity levels of the room itself
-                var ambient = new Ambient();
-                ambient.temperature = GenerateDoubleValue(rand, 22.6, 1.1);
-                ambient.humidity = Convert.ToInt32(GenerateDoubleValue(rand, 20.0, 3.5));
-
-                // The machine is in factory 1
-                return new MessageBody
-                {
-                    factoryId = 1,
-                    machine = machine,
-                    ambient = ambient,
-                    timeCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-                };
-            }
-
-            // Returned values generally follow a normal distribution and we pass in the mean and standard deviation,
-            // but occasionally we will get anomalies which report values well outside the expectations for this distribution
-            private double GenerateDoubleValue(Random rand, double mean, double stdDev, double likelihoodOfAnomaly = 0.06)
-            {
-                double u1 = rand.NextDouble();
-
-                double res = BoxMullerTransformation(rand, mean, stdDev);
-
-                if (u1 <= likelihoodOfAnomaly / 2.0)
-                {
-                    // Generate a negative anomaly
-                    res = res * 0.6;
-                }
-                else if (u1 > likelihoodOfAnomaly / 2.0 && u1 <= likelihoodOfAnomaly)
-                {
-                    // Generate a positive anomaly
-                    res = res * 1.8;
-                }
-
-                return res;
-            }
-
-            private double BoxMullerTransformation(Random rand, double mean, double stdDev)
-            {
-                double u1 = 1.0 - rand.NextDouble();
-                double u2 = 1.0 - rand.NextDouble();
-                double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-                return mean + stdDev * randStdNormal;
-            }
-
-            private async Task DesiredPropertyUpdateHandler(TwinCollection desiredProperties, object userContext)
-            {
-                var moduleClient = userContext as ModuleClient;
-
-                if (desiredProperties.Contains("OutputChannel"))
-                {
-                    OutputChannelName = desiredProperties["OutputChannel"];
-                }
-                if (desiredProperties.Contains("Interval"))
-                {
-                    Interval = desiredProperties["Interval"];
-                }
-                var reportedProperties = new TwinCollection(new JObject(), null);
-                reportedProperties["OutputChannel"] = OutputChannelName;
-                reportedProperties["Interval"] = Interval;
-                await moduleClient.UpdateReportedPropertiesAsync(reportedProperties);
-
-            }
-
-            public async Task<byte[]> ReadAllBytesAsync(string filePath, CancellationToken cancellationToken)
-            {
-                const int bufferSize = 4096;
-                using (FileStream sourceStream = new FileStream(filePath,
-                    FileMode.Open, FileAccess.Read, FileShare.Read,
-                    bufferSize: bufferSize, useAsync: true))
-                {
-                    byte[] data = new byte[sourceStream.Length];
-                    int numRead = 0;
-                    int totalRead = 0;
-
-                    while ((numRead = await sourceStream.ReadAsync(data, totalRead, Math.Min(bufferSize,(int)sourceStream.Length-totalRead), cancellationToken)) != 0)
-                    {
-                    totalRead += numRead;
-                    }
-                    return data;
-                }
-            }
-        }
-    }
-    ```
-
-    For an explanation of the code, we will send messages to Azure IoT Hub in the shape of `MessageBody`, which includes a `Machine` entry containing information about the monitored machine, as well as an `Ambient` entry which contains the current temperature and humidity in the room.  The `Run()` method controls message management, sending one message every `Interval` milliseconds, though this is configurable as an environment setting.  We connect to the Edge runtime and, once synchronization with the IoT Hub is complete, we build out new messages using `GenerateNewMessage()` and send them.  The `GenerateNewMessage()` function builds artificial messages which generally follow a normal distribution but occasionally exhibit anomalous behavior.  After generating and sending a message, we wait `Interval` milliseconds before sending a new message.
-
-12. Navigate to the **Command Palette** by selecting it from the View menu, or by pressing `Ctrl+Shift+P`. Select the option **Azure IoT Edge: Set Default Target Platform for Edge Solution**.
-
-    ![Set a target platform for the IoT Edge Solution.](media/code-iot-edge-target-platform.png 'Azure IoT Edge: Set Default Target Platform for Edge Solution')
-
-13. Select **amd64** from the target platform menu. Be sure not to select windows-amd64, as the sensor will deploy to a Linux machine.
-
-    ![Set a target platform of amd64 for the IoT Edge Solution.](media/code-iot-edge-amd64.png 'amd64')
-
-14. Navigate to the Terminal and enter the following command:
-
-    ```powershell
-    docker login -u <USERNAME> -p "<PASSWORD>" <CONTAINER_REGISTRY>
-    ```
-
-    Enter appropriate values for username, password, and container registry. The values for username and password are stored in the .env file.
-
-    ![Log in to the container registry.](media/code-iot-edge-docker-login.png 'docker login')
-
-15. Right-click on **deployment.template.json** and select **Build and Push IoT Edge Solution**. This may take several minutes depending upon the speed of your internet connection. The terminal will include the current status of each Docker image layer. When everything is **Pushed**, continue to the next step.
-
-    ![Build and push the IoT Edge solution.](media/code-iot-edge-build-push.png 'Build and Push IoT Edge Solution')
-
-16. Navigate to the Azure IoT Hub section and select your IoT Hub by selecting the **...** menu option and choosing **Select IoT Hub**. Choose your subscription and IoT Hub and it will appear in the Azure IoT Hub section.
-
-    ![The Select IoT Hub option is selected.](media/code-iot-edge-select-hub.png 'Select IoT Hub')
-
-    >**Note**: If this does not work for you, you can alternatively select **Set IoT Hub Connection String** in VS Code. Then, navigate to your IoT Hub in Azure portal. Under **Settings**, select **Shared access policies**, and select the **iothubowner** policy. Copy **Connection string--primary key** into VS Code. Your IoT Hub should now appear.   
-    >
-    >   ![Accessing the iothubowner access policy connection string to access the IoT Hub within VS Code.](./media/access-iothub-connection-string.png "iothubowner connection string")
-
-17. Right-click on the `modernize-app-ubuntu1` device and select **Create Deployment for Single Device**.
-
-    ![The Create Deployment for Single Device option is selected.](media/code-iot-edge-create-deployment.png 'Create Deployment for Single Device')
-
-18. In the **Open** menu, navigate to  the **config** folder and select **deployment.amd64.json** and then select **Select Edge Deployment Manifest**.
-
-    ![The amd64 configuration is selected.](media/code-iot-edge-amd64-deployment.png 'Select Edge Deployment Manifest')
-
-    > **Note**: It is important that you not select the `deployment.template.json` or `deployment.debug.template.json` files. These are template JSON files which do not contain any sensitive details. These are the files that you can safely check into source control. Visual Studio Code uses these templates as the basis for the proper deployment files in the **config** folder. You should not check in files in the config folder.
-
-19. Navigate back to the IoT Hub (referring back to Task 1 if needed), and then return to the IoT Edge entry in Automatic Device Management. Select the entry labeled **modernize-app-ubuntu1** and you should see an IoT Edge Runtime Response of **200 -- OK** and four deployed modules, including the **WWIFactorySensorModule**.
-
-    ![The modernize-app-ubuntu1 device is returning a 200 response code and reports that the WWIFactorySensorModule is installed.](media/azure-modernize-app-ubuntu1-status.png 'Status for the modernize-app-ubuntu1 device')
-
-## Exercise 3: Use Azure Machine Learning to train and register a predictive maintenance model
-
-Duration: 40 minutes
-
-Now that your data is streaming into Azure IoT Hub, it is time to train and build a model to predict whether machine maintenance is required. This model will become a valuable part of data enrichment in Exercise 5.
+Before you begin streaming data, it is time to train and build a model to predict whether machine maintenance is required. This model will become a valuable part of data enrichment in Exercise 5.
 
 ### Task 1: Load historical maintenance data
 
@@ -715,9 +184,9 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
     From there, select the **modernize-app** resource group.
 
-3. Select the **modernizeappstorage#SUFFIX#** storage account which you created before the hands-on lab. Note that there may be multiple storage accounts, so be sure to choose the one you created.
+3. Select the **modappadls#SUFFIX#** storage account which you created before the hands-on lab. Note that there may be multiple storage accounts, so be sure to choose the one you created.
 
-    ![The storage account named modernizeappstorage is selected.](media/azure-storage-account-select.png 'The modernizeappstorage storage account')
+    ![The storage account named modappadls is selected.](media/azure-storage-account-select.png 'The modappadls storage account')
 
 4. In the **Data Lake Storage** section, select **Containers**. Then, select the **synapse** container you created before the hands-on lab.
 
@@ -725,7 +194,7 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
 5. In the synapse container, select **+ Add Directory**. Enter **maintenancedata** for the name and select **Save**. Then, add another directory named **models**.
 
-6. Navigate to the **maintenancedata** directory and select the **Upload** option. In the Files section, select the folder icon to upload files. Navigate to where you saved **HistoricalMaintenanceRecord.csv** and choose this file for upload. Then select **Upload** to finish uploading the file.
+6. Navigate to the **maintenancedata** directory and select the **Upload** option. In the Files section, select the folder icon to upload files. The historical maintenance record data is located in the folder containing hands-on lab resources, in the `Resources\Synapse` directory. Navigate to where you saved **HistoricalMaintenanceRecord.csv** and choose this file for upload. Then select **Upload** to finish uploading the file.
 
     ![The historical maintenance record data is uploaded.](media/azure-synapse-upload.png 'Historical maintenance record')
 
@@ -733,38 +202,58 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
 1. Navigate to the **modernize-app** resource group in the [Azure portal](https://portal.azure.com).
 
-2. Select the **modernize-app-#SUFFIX#** resource with a Type of **Machine Learning**.
+2. Select the **modappadls#SUFFIX#** resource with a Type of **Storage account**.
+
+    ![The Storage account resource is selected.](media/azure-storage-select.png 'Storage account')
+
+3. Navigate to the **Access keys** option in the **Security + networking** selection.  Select **Show keys** to make the keys available, and then copy the **Key** for use later.
+
+    ![Copy the access key.](media/storage-account-key.png 'Storage account access key')
+
+4. Navigate to the **Access Control (IAM)** menu setting.  Navigate to **Role assignments** and select **+ Add** to add a new role.  Choose **Add role assignment** to add a new role assignment.
+
+    ![The option to add a role assignment is selected.](media/storage-account-role-assignment.png 'Role assignments')
+
+5. Select the **Storage Blob Data Owner** role and select **Next**.
+
+    ![The Storage Blob Data Owner role assignment is selected.](media/storage-account-role-assignment-2.png 'Storage Blob Data Owner')
+
+6. Select **+ Select members** and choose your account.  Then, select **Review + assign** to create the role assignment.
+
+    ![Add the role assignment.](media/storage-account-role-assignment-3.png 'Create role assignment')
+
+7. Return to the **modernize-app** resource group.  Select the **modernize-app-#SUFFIX#** resource with a Type of **Machine Learning**.
 
     ![The Machine Learning resource is selected.](media/azure-ml-select.png 'Machine Learning')
 
-3. Select **Launch now** to open the Azure Machine Learning studio.
+8. Select **Launch studio** to open the Azure Machine Learning studio.
 
     ![The option to launch Azure Machine Learning Studio is selected.](media/azure-ml-launch.png 'Launch now')
 
-4. In the Azure Machine Learning studio, select the **Datastores** option in the Manage tab. Then, select the **+ New datastore** option.
+9. In the Azure Machine Learning studio, select the **Datastores** option in the Manage tab. Then, select the **+ New datastore** option.
 
     ![The option to create a new datastore is selected.](media/azure-ml-new-datastore.png 'New datastore')
 
-5. In the **New datastore** window, complete the following:
+10. In the **New datastore** window, complete the following:
 
-   | Field                          | Value                                              |
-   | ------------------------------ | ------------------------------------------         |
-   | Datastore name                 | _`modernizeappstorage`_                            |
-   | Datastore type                 | _select `Azure Blob Storage`_                      |
-   | Account selection method       | _select `From Azure subscription`_                 |
-   | Subscription ID                | _select the appropriate subscription_              |
-   | Storage account                | _select `modernizeappstorage#SUFFIX#`_             |
-   | Blob container                 | _select `synapse`_                                 |
-   | Save credentials with the datastore for data access | _select `Yes`_                |
-   | Authentication type            | _select `Account key`_                             |
-   | Account key                    | _enter the account key_                            |
-   | Use workspace managed identity for data preview ...      | _select `No`_            |
+    | Field                          | Value                                              |
+    | ------------------------------ | ------------------------------------------         |
+    | Datastore name                 | _`modernizeappstorage`_                            |
+    | Datastore type                 | _select `Azure Blob Storage`_                      |
+    | Account selection method       | _select `From Azure subscription`_                 |
+    | Subscription ID                | _select the appropriate subscription_              |
+    | Storage account                | _select `modappadls#SUFFIX#`_                      |
+    | Blob container                 | _select `synapse`_                                 |
+    | Save credentials with the datastore for data access | _select `Yes`_                |
+    | Authentication type            | _select `Account key`_                             |
+    | Account key                    | _enter the account key_                            |
+    | Use workspace managed identity for data preview ...      | _select `No`_            |
 
-   ![In the New datastore output, form field entries are filled in.](media/azure-ml-new-datastore-1.png 'New datastore')
+    ![In the New datastore output, form field entries are filled in.](media/azure-ml-new-datastore-1.png 'New datastore')
 
-   >**Note**: If you have not saved your storage account key anywhere yet, navigate to your storage account. Then, in the **Settings** menu, select **Access keys** and copy the **Key** value in the **key1** section.
+    >**Note**: If you have not saved your storage account key anywhere yet, navigate to your storage account. Then, in the **Settings** menu, select **Access keys** and copy the **Key** value in the **key1** section.
 
-6. Select **Create** to add the new output.
+11. Select **Create** to add the new output.
 
 ### Task 3: Develop the predictive maintenance model
 
@@ -780,19 +269,18 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
     ![The New Compute option is selected.](media/azure-ml-notebook-add-compute.png 'Add new compute')
 
-4. In the **Create compute instance** window, under the **Select virtual machine** blade, complete the following and then select **Next**.
+4. In the **Create compute instance** window, under the **Select virtual machine** blade, complete the following and then select **Create**.
 
    | Field                          | Value                                              |
    | ------------------------------ | ------------------------------------------         |
+   | Compute name                   | _`modernizeapp#SUFFIX#`_                           |
    | Region                         | _`Keep it set at the default value`_               |
    | Virtual machine type           | _select `CPU (Central Processing Unit)`_           |
    | Virtual machine size           | _select `Standard_DS3_v2`_                         |
 
    ![In the New compute instance output, form field entries are filled in.](media/azure-ml-notebook-add-compute-3.png 'New compute instance')
 
-5. In the **Configure Settings** blade, set **Compute name** to `modernizeapp#SUFFIX#` and then select **Create**.
-
-6. Copy and paste the following code into the notebook code block.
+5. Copy and paste the following code into the notebook code block.
 
     ```python
     from azureml.core import Workspace, Environment, Datastore
@@ -856,7 +344,7 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
     This notebook pulls the maintenance record history from `HistoricalMaintenanceRecord.csv` and builds a Pandas DataFrame from it.  We then break out data into two DataFrames, `X` and `y`.  The `y` DataFrame contains the column `Label`, which is what we want to predict.  We use the `X` values of `Pressure` and `MachineTemperature` to make the best prediction of `Label` that we can.  Then, we break out data into training and test datasets and fit the training data to a decision tree (essentially, a series of if-else statements).  To gauge the quality of our simple model, we generate predictions against the test data set and compare those predicted scores to the actual values and print out the overall accuracy of the model.  After doing this, we serialize the model as a Pickle file and register this new model as `stamp_press_model`.
 
-7. After the **Compute** has been created, select **Run cell** on the cell. This will train and test a predictive maintenance model and then register the final model with Azure ML.
+6. After the **Compute** has been created, select **Run cell** on the cell. This will train and test a predictive maintenance model and then register the final model with Azure ML.
 
     ![Running code to train an Azure ML model.](media/azure-ml-notebook-run.png 'Run cell')
 
@@ -900,9 +388,38 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
     ![The stamp press model is selected.](media/azure-ml-endpoints.png 'Endpoints')
 
-5. In the stamp-press-model endpoint, observe the current state. If the Deployment state is **Transitioning**, this means that Azure Machine Learning is still deploying the endpoint. Once the deployment state switches to **Healthy**, deployment succeeded and your Azure Machine Learning deployment is ready to be consumed.  It may take **up to 10 minutes** before the Deployment state is Healthy.
+5. In the stamp-press-model endpoint, observe the current state. If the Deployment state is **Transitioning** or **Unhealthy**, this means that Azure Machine Learning is still deploying the endpoint. Once the deployment state switches to **Healthy**, deployment succeeded, and your Azure Machine Learning deployment is ready to be consumed.  It may take **up to 10 minutes** before the Deployment state is Healthy.
 
     ![The stamp press model is deployed.](media/azure-ml-deployed.png 'Deployed model')
+
+    If, after 10 minutes, you still do not have a **Healthy** deployment state, you can [troubleshoot the process locally](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-local), on a machine which has Python, the Azure Machine Learning Python SDK, and the Azure CLI installed.  Open a command prompt and navigate to the **Resources\Azure ML** folder.  Then, use the following code to deploy a container locally.  You will need to fill in your Azure Machine Learning workspace name and subscription ID.
+
+    ```python
+    from azureml.core.webservice import Webservice
+    from azureml.core.model import InferenceConfig
+    from azureml.core.environment import Environment
+    from azureml.core import Workspace
+    from azureml.core.model import Model
+
+    ws = Workspace.get(name="<AML workspace name>", subscription_id="<subscription ID>", resource_group="modernize-app")
+    model = Model(ws, 'stamp_press_model')
+
+
+    myenv = Environment.from_conda_specification(name="env", file_path="env.yml")
+    inference_config = InferenceConfig(entry_script="score.py", environment=myenv)
+    deployment_config = LocalWebservice.deploy_configuration(port=6789)
+
+    local_service = Model.deploy(workspace=ws, 
+                        name='stamp-press-local', 
+                        models=[model], 
+                        inference_config=inference_config, 
+                        deployment_config = deployment_config)
+
+    local_service.wait_for_deployment(show_output=True)
+    print(f"Scoring URI is : {local_service.scoring_uri}")
+    ```
+
+    Wait until the container is running and execute `docker ps -a` to get the container ID.  Then, run `docker logs <container ID>` to troubleshoot the problem.
 
 ### Task 5: Test the predictive maintenance model
 
@@ -931,11 +448,15 @@ Now that your data is streaming into Azure IoT Hub, it is time to train and buil
 
     Like any realistic data set, the historical maintenance record is imperfect and so the data your model trained on will include some incorrect maintenance operations, leading to incorrect maintenance recommendations. Try a few values near the edges of pressure and machine temperature to see.
 
-## Exercise 4:  Create an Azure Function to send event telemetry to Cosmos DB
+## Exercise 3:  Create an Azure Function to send event telemetry to Cosmos DB
 
 Duration: 30 minutes
 
-Now that IoT Hub is storing data, we can begin to process the sensor data messages and insert the results into long-term storage. In this exercise, we will use an Azure Function to handle IoT Hub events and store event data in Cosmos DB for downstream enrichment.
+[Azure IoT Hub](https://azure.microsoft.com/services/iot-hub/) is a Microsoft offering which provides secure and reliable communication between IoT devices and cloud services in Azure. The aim of this service is to provide bidirectional communication at scale. The core focus of many industrial companies is not on cloud computing; therefore, they do not necessarily have the personnel skilled to provide guidance and to stand up a reliable and scalable infrastructure for an IoT solution. It is imperative for these types of companies to enter the IoT space not only for the cost savings associated with remote monitoring, but also to improve safety for their workers and the environment.
+
+Wide World Importers is one such company that could use a helping hand entering the IoT space.  They have an existing suite of sensors and on-premises data collection mechanisms at each factory but would like to centralize data in the cloud. To achieve this, we will stand up a IoT Hub and assist them with the process of integrating existing sensors with IoT Hub via [Azure IoT Edge](https://azure.microsoft.com/services/iot-edge/). A [predictable cost model](https://azure.microsoft.com/pricing/details/iot-hub/) also ensures that there are no financial surprises.
+
+For this lab, we will simulate the IoT process using an Azure Function. In this exercise, we will create the Azure Function to generate event data and connect it to Cosmos DB for downstream enrichment.
 
 ### Task 1: Enable Azure Synapse Link for Cosmos DB
 
@@ -1031,9 +552,9 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
 
     ![.NET Core 3 is selected.](media/code-function-select-net-runtime.png 'Select a .NET runtime')
 
-5. Choose **IotHubTrigger** in the **Select a template for your project's first function** menu.
+5. Choose **Timer trigger** in the **Select a template for your project's first function** menu.
 
-    ![The IotHubTrigger template is selected.](media/code-function-select-iot-hub-trigger.png 'Select a template')
+    ![The TimerTrigger template is selected.](media/code-function-select-timer-trigger.png 'Select a template')
 
 6. Name the function **WriteEventsToTelemetryContainer**.
 
@@ -1043,43 +564,30 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
 
     ![The Azure Functions namespace is entered.](media/code-function-select-namespace.png 'Provide a namespace')
 
-8. Choose **Create new local app setting** in the **Select setting from "local.settings.json"** menu.
+8. Change the timer trigger to `0 */1 * * * *`, which runs every 1 minute.
 
-    ![The option to create a new local app setting is selected.](media/code-function-select-local-setting.png 'Select setting from local.settings.json')
+    ![The cron job runs every minute.](media/code-function-cron.png, 'Create new timer trigger')
 
-9.  Select **modernize-app-iot-#SUFFIX#** from the **Select an event hub namespace** menu. If you do not see this IoT Hub but you do see the Event Hub created before the hands-on lab, select it to continue.
-
-    ![The modernize-app event hub is selected.](media/code-function-select-event-hub.png 'Select an event hub namespace')
-
-10. In the **Select an event hub** menu, select **Skip for now** if you do not see any hubs.
-
-    ![The skip for now option is selected.](media/code-function-select-event-hub-1.png 'Select an event hub')
-
-11. Enter **messages/modules/WWIFactorySensorModule/outputs** for the IoT Hub endpoint to which messages will be sent.
-
-    ![The IoT Hub endpoint is selected.](media/code-function-event-hub-endpoint.png 'The IoT Hub endpoint')
-
-12. After entering the endpoint name, you may see a modal dialog which indicates that in order to debug, you must select a storage account. Choose **Select storage account** and then select the **modernizeappstorage#SUFFIX#** account.
+9. After entering the endpoint name, you may see a modal dialog which indicates that in order to debug, you must select a storage account. Choose **Select storage account** and then select the **modernappadls#SUFFIX#** account.
 
     ![Select storage account is selected.](media/code-create-function-storage.png 'In order to debug, you must select a storage account for internal use by the Azure Functions runtime.')
 
-13. Choose **Open in current window** in the **Select how you would like to open your project** menu.
+10. Choose **Open in current window** in the **Select how you would like to open your project** menu.
 
     ![The Azure Function will open in the current window.](media/code-function-select-open.png 'Open in current window')
 
-14. Open **local.settings.json** and add an entry for **IoTHubTriggerConnection** using the Event Hub-compatible endpoint in your IoT Hub. Then, add entries for **cosmosEndpointUrl** and **cosmosPrimaryKey** and fill this in with the URI and primary key for your Cosmos DB account, respectively.
+11. Open **local.settings.json** and add entries for **cosmosEndpointUrl** and **cosmosPrimaryKey**.  Fill these in with the URI and primary key for your Cosmos DB account, respectively.
 
     ```json
-    "IoTHubTriggerConnection": "{ Your Event Hub-compatible endpoint }",
     "cosmosEndpointUrl": "https://modernize-app-#SUFFIX#.documents.azure.com:443/",
-    "cosmosPrimaryKey": "{ Your Comsos DB account's primary key }",
+    "cosmosPrimaryKey": "{ Your Cosmos DB account's primary key }",
     ```
 
     >**Note**: The Event Hub compatible endpoint can be found in the **Built-in endpoints** selection in the Settings menu for IoT Hub if you did not collect that information in Exercise 2.
 
     ![The new local settings are filled in.](media/azure-function-local-settings.png 'local.settings.json')
 
-15. Replace the contents of **WriteEventsToTelemetryContainer.cs** with the following, and then save the file.
+12. Replace the contents of **WriteEventsToTelemetryContainer.cs** with the following, and then save the file.
 
     ```csharp
     using IoTHubTrigger = Microsoft.Azure.WebJobs.EventHubTriggerAttribute;
@@ -1170,9 +678,9 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
     }
     ```
 
-    This function reads events from IoT Hub, which means we need the same `MessageBody` class that our edge devices created.  This function's purpose is to execute the `Run()` method, which deserializes the message into a `MessageBody` and wraps it in a `TelemetryOutput` object.  This wrapper includes several newly-created attributes which we will use to track data as it changes through the course of data processing.
+    For an explanation of the code, we will build messages in the shape of `MessageBody`, which includes a `Machine` entry containing information about the monitored machine, as well as an `Ambient` entry which contains the current temperature and humidity in the room.  The `GenerateNewMessage()` function builds artificial messages which generally follow a normal distribution but occasionally exhibit anomalous behavior.  After generating a message, we serialize the message and convert into a `TelemetryOutput` object.  This wrapper includes several attributes which we will use to track data as it changes through the course of data processing.
 
-16. In the Visual Studio Code terminal, enter the following commands.
+13. In the Visual Studio Code terminal, enter the following commands.
 
     ```cmd
     dotnet add package Microsoft.Azure.Cosmos
@@ -1186,6 +694,8 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
 
     ![The Azure Function built successfully.](media/code-function-build-succeeded.png 'Build succeeded.')
 
+    > **Note**:  If you get warnings which read like "Could not evaluate 'Cosmos.CRTCompat.dll' for extension metadata" that this is fine. It has to do with missing debugger symbols on the Cosmos DB NuGet packages and will not affect deployment or the lab.  As long as you see that the build succeeded with 0 errors, it should be fine.
+
 ### Task 4: Deploy and configure an Azure Function
 
 1. In Visual Studio Code, select the **Azure** menu option and navigate to **Functions**. Drill down into **Local Project** to **Functions** until you see the **WriteEventsToTelemetryContainer** function.
@@ -1196,7 +706,7 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
 
     ![Deploy to Function App is selected.](media/code-function-telemetry-deploy.png 'Deploy to Function App...')
 
-3. Choose the appropriate subscription from the list. Then, choose the Function App starting with **modernize-app** from the Function App list.
+3. Choose the appropriate subscription from the list. Then, choose the Function App named **modernize-app-#SUFFIX#** from the Function App list.
 
     ![The appropriate Function App is selected.](media/code-function-deploy-app.png 'Select Function App in Azure')
 
@@ -1220,21 +730,19 @@ Now that IoT Hub is storing data, we can begin to process the sensor data messag
    | cosmosPrimaryKey               | _enter the primary key for your Cosmos DB account_ |
    | azureMLEndpointUrl             | _enter the URL (with /score) from exercise 3_      |
    | modernizeapp\_COSMOSDB         | _`AccountEndpoint=https://modernize-app-#SUFFIX#.documents.azure.com:443/;AccountKey={PRIMARY KEY};`_ |
-   | pg\_connection                  | _`Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true`_ |
-   | IoTHubTriggerConnection        | _enter the Event Hub compatible endpoint for your IoT Hub_ |
-   | EventHubConnection             | _enter the Event Hub primary connection string, NOT the IoT Hub connection string_    |
+   | EventHubConnection             | _enter the Event Hub primary connection string_    |
 
-8. Select **Save** and then **Continue** on the App Service menu to save the new application settings.  These application settings will be used in the Azure functions we have created.  `cosmosEndpointUrl`, `cosmosPrimaryKey`, and `IoTHubTriggerConnection` will be used in the `WriteEventsToTelemetryContainer` function.  `azureMLEndpointUrl`, `pg_connection`, and `EventHubConnection` will be used in the `ProcessTelemetryEvents` function.  Finally, `modernizeapp_COSMOSDB` will be used in the `ProcessTemperatureAnomalyEvents` and `ProcessTelemetryEvents` functions.  By creating these application settings, we avoid the risk of hard-coding connection strings in our files or including passwords in configuration files which might be checked into source control.  The application settings are stored securely and if you have multiple environments, you can configure each App Service to use different settings.
+8. Select **Save** and then **Continue** on the App Service menu to save the new application settings.  These application settings will be used in the Azure functions we have created.  `cosmosEndpointUrl` and `cosmosPrimaryKey` will be used in the `WriteEventsToTelemetryContainer` function.  `azureMLEndpointUrl` and `EventHubConnection` will be used in the `ProcessTelemetryEvents` function.  Finally, `modernizeapp_COSMOSDB` will be used in the `ProcessTemperatureAnomalyEvents` and `ProcessTelemetryEvents` functions.  By creating these application settings, we avoid the risk of hard-coding connection strings in our files or including passwords in configuration files which might be checked into source control.  The application settings are stored securely and if you have multiple environments, you can configure each App Service to use different settings.
 
     ![The New application settings are filled out.](media/azure-function-new-appsettings.png 'New application settings')
 
 9. Return to the **Overview** menu and then **Stop** and **Start** the Azure Function. This will allow the function to pick up your new application settings and begin publishing data to Cosmos DB.
 
-## Exercise 5:  Enrich event telemetry with predictive maintenance results
+## Exercise 4:  Enrich event telemetry with predictive maintenance results
 
 Duration: 30 minutes
 
-Events are loading into the `telemetry` container. Using that data, we can create a function which handles and enriches the telemetry data. In this exercise, you will create a function which writes telemetry data to PostgresSQL, then enriches the data with results from your predictive maintenance model and writes the results to PostgreSQL and an Event Hub.
+Events are loading into the `telemetry` container. Using that data, we can create a function which handles and enriches the telemetry data. In this exercise, you will create a function which reads telemetry data from Cosmos DB, then enriches the data with results from your predictive maintenance model and writes the results to an Event Hub.
 
 ### Task 1:  Create an Event Hub
 
@@ -1266,101 +774,7 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
 6. Give the consumer group a name of `anomalydetection` and select **Create**.
 
-### Task 2: Create an events table in PostgreSQL
-
-1. Navigate to the **modernize-app** resource group in the [Azure portal](https://portal.azure.com).
-
-    ![The resource group named modernize-app is selected.](media/azure-modernize-app-rg.png 'The modernize-app resource group')
-
-    If you do not see the resource group in the Recent resources section, type in "resource groups" in the top search menu and then select **Resource groups** from the results.
-
-    ![In the Services search result list, Resource groups is selected.](media/azure-resource-group-search.png 'Resource groups')
-
-    From there, select the **modernize-app** resource group.
-
-2. Select the PostgreSQL server group you created before the hands-on lab. This will have a Type of **Azure Database for PostgreSQL server group**. There are other entries of type Azure Database for PostgreSQL server v2, but we will need to gather information from the server group itself.
-
-    ![In the modernize-app resource group, the PostgreSQL server group is selected.](media/azure-postgres-server-group.png 'Azure Database for PostgreSQL server group')
-
-3. On the **Overview** page, copy down the **Coordinator name** field.
-
-    ![The coordinator name for the PostgreSQL Hyperscale server group is selected.](media/azure-postgres-coordinator.png 'Coordinator name')
-
-4. Open Azure Data Studio and connect to the coordinator server by filling in the following in the Connection Details form:
-
-   | Field                          | Value                                       |
-   | ------------------------------ | ------------------------------------------  |
-   | Connection type                | _select `PostgreSQL`_                       |
-   | Server name                    | _enter the coordinator name_                |
-   | Authentication type            | _select `Password`_                         |
-   | User name                      | _enter `citus`_                             |
-   | Password                       | _enter the password_                        |
-   | Database name                  | _enter `citus`_                             |
-
-   > **Note**: You might need to force SSL to connect to PostgreSQL on Azure. To do this in Azure Data Studio, select the **Advanced** button and change the value for SSL mode to **Require** from its default value of Prefer.
-
-   ![The form fields are completed with the previously described settings.](media/azure-data-studio-citus-connection-details.png 'Azure Data Studio Settings')
-
-5. After connecting to PostgreSQL in Azure Data Studio, select **New Query** from the top menu to open a new query window.
-
-    ![The New Query option is selected.](media/azure-data-studio-citus-new-query.png 'New Query')
-
-6. Enter the following query and then select **Run** to create an `event` table.
-
-    ```sql
-    CREATE TABLE event(
-        id serial,
-        machine_id int,
-        event_id varchar(40),
-        event_type varchar(70),
-        entity_type varchar(70),
-        entity_id varchar(40),
-        event_data json
-    )
-    PARTITION BY RANGE (machine_id);
-
-    -- Create a table for machines in the 1xxxx series
-    -- This demonstrates the ability to create new tables for partitions of data
-    -- rather than an ideal partitioning strategy
-    CREATE TABLE event_1
-        partition OF event(machine_id)
-        FOR VALUES FROM (10000) TO (20000);
-
-    -- Create a table for machines in the 2xxxx series
-    CREATE TABLE event_2
-        partition OF event(machine_id)
-        FOR VALUES FROM (20000) TO (30000);
-    ```
-
-   ![The event table is created.](media/azure-data-studio-event.png 'The event table')
-
-7. In a new query window, run the following to ensure that you are able to insert a row into the sensordata partitioned table.
-
-    ```sql
-    INSERT INTO event(
-        machine_id,
-        event_id,
-        event_type,
-        entity_type,
-        entity_id,
-        event_data
-    )
-    VALUES
-    (
-        21644,
-        uuid_generate_v4(),
-        'Telemetry Ingest',
-        'MachineTelemetry',
-        uuid_generate_v4(),
-        '{ "Test": "Yes" }'
-    );
-
-    SELECT * FROM event;
-    ```
-
-    You should see one row returned.
-
-### Task 3: Create an Azure Function based on a Cosmos DB trigger
+### Task 2: Create an Azure Function based on a Cosmos DB trigger
 
 1. Open Visual Studio Code and navigate to the folder you created in Exercise 4 for Azure Functions. In the Azure menu, navigate to the top-right corner and select **Create Function...**
 
@@ -1385,7 +799,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
     ```json
     "azureMLEndpointUrl": "{ Your Azure ML endpoint with /score }",
-    "pg_connection": "Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true",
     "EventHubConnection": "{ Your Event Hub primary connection string }"
     ```
 
@@ -1408,7 +821,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Linq;
-    using Npgsql;
     using Azure.Messaging.EventHubs;
     using Azure.Messaging.EventHubs.Producer;
 
@@ -1457,9 +869,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                     TelemetryOutput to = LoadTelemetryRecord(doc);
                     MessageBody msg = JsonConvert.DeserializeObject<MessageBody>(to.event_data);
 
-                    // Write telemetry event to Postgres
-                    WriteTelemetryEventToPostgres(to);
-
                     // Perform Azure ML call and build a new output object
                     InputData payload = new InputData();
                     var machinetemp = msg.machine.temperature;
@@ -1471,7 +880,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                     TelemetryOutput newTo = CreateNewTelemetryOutput(to, msg, maintenanceRecommendation);
 
                     // Write maintenance recommendation events for downstream processing
-                    WriteTelemetryEventToPostgres(newTo);
                     await WriteTelemetryEventToEventHub(newTo);
                 }
             }
@@ -1530,46 +938,6 @@ Events are loading into the `telemetry` container. Using that data, we can creat
                 return newTo;
             }
 
-            public static void WriteTelemetryEventToPostgres(TelemetryOutput to)
-            {
-                string insertCommand = @"INSERT INTO event(
-                    machine_id,
-                    event_id,
-                    event_type,
-                    entity_type,
-                    entity_id,
-                    event_data
-                )
-                VALUES
-                (
-                    @machine_id,
-                    @event_id,
-                    @event_type,
-                    @entity_type,
-                    @entity_id,
-                    CAST(@event_data AS json)
-                );";
-
-                // Connect to Postgres
-                var connStr = Environment.GetEnvironmentVariable("pg_connection");
-                using (var conn = new NpgsqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    using (var cmd = new NpgsqlCommand(insertCommand, conn))
-                    {
-                        cmd.Parameters.AddWithValue("machine_id", to.machineid);
-                        cmd.Parameters.AddWithValue("event_id", to.id);
-                        cmd.Parameters.AddWithValue("event_type", to.event_type);
-                        cmd.Parameters.AddWithValue("entity_type", to.entity_type);
-                        cmd.Parameters.AddWithValue("entity_id", to.entity_id);
-                        cmd.Parameters.AddWithValue("event_data", to.event_data);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-
             public static async Task WriteTelemetryEventToEventHub(TelemetryOutput to)
             {
                 await using (var producerClient = new EventHubProducerClient(eventHubConnection, eventHubName))
@@ -1585,19 +953,16 @@ Events are loading into the `telemetry` container. Using that data, we can creat
     }
     ```
 
-    The code in this function collects data from a specified Cosmos DB collection and writes it to Postgres.  The `Run()` method triggers every time a new entry is added to the Cosmos DB collection `sensors.telemetry`.  There can be more than one document per `Run()` call, so we need to process each one individually.  We first convert the Cosmos telemetry record into a `TelemetryOutput` and deserialize the event's `MessageBody`.
+    The code in this function collects data from a specified Cosmos DB collection and writes it to an Event Hub.  The `Run()` method triggers every time a new entry is added to the Cosmos DB collection `sensors.telemetry`.  There can be more than one document per `Run()` call, so we need to process each one individually.  We first convert the Cosmos telemetry record into a `TelemetryOutput` and deserialize the event's `MessageBody`.
 
-    Immediately after loading the telemetry record, we write it out to Postgres using `WriteTelemetryEventToPostgres`.  This method connects to Postgres using the `pg_connection` connection string and executes the `insertCommand` SQL statement to perform an insertion.
+    The next step is to call the Azure Machine Learning endpoint for the stamp press model.  This requires the machine temperature and pressure, which we can collect from the message.  We then call `GetMaintenancePrediction()` to make the HTTP request.  Azure Machine Learning returns a list of predictions, but because we only sent one item's inputs, we expect to get only one result.
 
-    The next step is to call the Azure Machine Learning endpoint for the stamp press model.  This requires the machine temperature and pressure, which we can collect from the message.  We then call `GetMaintenancePrediction()` to make the HTTP request.  Azure Machine Learning returns back a list of predictions, but because we only sent one item's inputs, we expect to get only one result.
-
-    Once we have the maintenance prediction, we can write a new `TelemetryOutput` message to Postgres which contains the prediction as well as an Event Hub.
+    Once we have the maintenance prediction, we can write a new `TelemetryOutput` message which contains the prediction to an Event Hub.
 
 5. In the Visual Studio Code terminal, enter the following commands.
 
     ```cmd
     dotnet add package Azure.Messaging.EventHubs
-    dotnet add package Npgsql
     dotnet restore
     dotnet build
     ```
@@ -1618,17 +983,13 @@ Events are loading into the `telemetry` container. Using that data, we can creat
 
     ![The option to deploy is selected.](media/code-function-deploy-check.png 'Deploy')
 
-9. To test the function, connect to your PostgreSQL instance with Azure Data Studio as you did in Task 2 and run the following query:
+9. To test the function, navigate to the `telemetry_to_score` Event Hub.  Ensure that you see incoming messages appear.
 
-    ```sql
-    SELECT * FROM event;
-    ```
+    ![Maintenance recommendations are coming in.](media/event-hub-messages.png 'Maintenance recommendations')
 
-    >**Note**: It may take 2-3 minutes for the new Azure Function to populate data into the **event** table. If you do not see data after several minutes, navigate to the Overview panel of the App Service and **Stop** and then **Start** the functions.
+    >**Note**: It may take 2-3 minutes for the new Azure Function to populate data into the **telemetry_to_score** Event Hub. If you do not see data after several minutes, navigate to the Overview panel of the App Service and **Stop** and then **Start** the functions.
 
-    ![Maintenance recommendations are coming in.](media/azure-data-studio-event-loading.png 'Maintenance recommendations')
-
-## Exercise 6:  Enrich event telemetry with automated anomaly detection
+## Exercise 5:  Enrich event telemetry with automated anomaly detection
 
 Duration: 15 minutes
 
@@ -1646,15 +1007,15 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     From there, select the **modernize-app** resource group.
 
-2. Navigate to the **modernize-app-stream** entry.
+2. Navigate to the **modernize-app-stream#SUFFIX#** entry.
 
-    ![In the modernize-app resource group, the Stream Analytics job is selected.](media/azure-stream-analytics-job.png 'Event Hubs Namespace')
+    ![In the modernize-app resource group, the Stream Analytics job is selected.](media/azure-stream-analytics-job.png 'Stream Analytics job')
 
 3. In the **Configure** menu, select **Storage account settings**. Then, on the Storage account settings page, select **Add storage account**.
 
     ![In the Configure menu, Storage account settings is selected, followed by the Add storage account option.](media/azure-stream-analytics-add-storage.png 'Add storage account')
 
-4. Choose the storage account you created before the hands-on lab, change the Authentication mode to **Connection string** and then select **Save**.
+4. Choose the storage account you created before the hands-on lab.  Ensure that the Authentication mode is set to **Connection string** and then select **Save**.
 
     ![In the Storage account settings menu, the appropriate storage account is selected.](media/azure-stream-analytics-add-storage-2.png 'Select storage account')
 
@@ -1662,7 +1023,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     ![In Stream Analytics job inputs, Event Hub is selected.](media/azure-stream-analytics-input-eventhub.png 'Event Hub')
 
-6. In the **New input** tab, name your input `telemetry` and choose the appropriate IoT Hub that you created before the lab.  Ensure that the Event Hub name is **telemetry_to_score**.  Change the Event Hub consumer group to **Use existing** and select **anomalydetection** from the list.  Set the **Authentication mode** to **Connection string** Leave the other settings at their default values and select **Save**.
+6. In the **New input** tab, name your input `telemetry` and choose the appropriate IoT Hub that you created before the lab.  Ensure that the Event Hub name is **telemetry_to_score**.  Change the Event Hub consumer group to **Use existing** and select **anomalydetection** from the list.  Ensure that the **Authentication mode** is set to **Connection string**. Leave the other settings at their default values and select **Save**.
 
    ![In the New input tab, form details are filled in.](media/azure-stream-analytics-input-eventhub-2.png 'Event Hub')
 
@@ -1747,7 +1108,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
         AND CAST(GetRecordPropertyValue(SpikeAndDipResult, 'Score') AS float)  < 0.001;
     ```
 
-    In the `RawData` common table expression, we parse the event data JSON to obtain the machine temperature.  We can use that temperature in the `AnomalyDetectionStep` common table expression to perform spike and dip analysis of temperature for anomalies.  We want to analyze temperature with a confidence of 80% or better and looking back at the last 60 data points over a five-minute period.  In the main query, we write data if Azure Cognitive Services deems a given result as anomalous and if its score is sufficiently low that we expect it not to be a false positive.  These anomalous results will be written into Cosmos DB for later processing.
+    In the `RawData` common table expression, we parse the event data JSON to obtain the machine temperature.  We can use that temperature in the `AnomalyDetectionStep` common table expression to perform spike and dip analysis of temperature for anomalies.  We want to analyze temperature with a confidence of 80% or better and looking back at the last 60 data points over a five-minute period.  In the main query, we write data if Azure Cognitive Services deems a given result as anomalous and if its score is sufficiently low that we expect it not to be a false positive. These anomalous results will be written into Cosmos DB for later processing.
 
 14. Select **Test query** to ensure that the queries run. You will see only the results of the last query in the Test results window and only the inputs and outputs you created in the Inputs and Outputs sections, respectively. If you want to see the results of a different query, highlight that query and select **Test selected query**.
 
@@ -1759,160 +1120,7 @@ Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you 
 
     ![The Start option in the Overview page is selected.](media/azure-stream-analytics-start.png 'Start')
 
-## Exercise 7:  Send scored telemetry data to PostgreSQL
-
-Duration: 15 minutes
-
-Your sensor data is flowing into the `telemetry_to_score` Event Hub and now you will enrich that data with automated anomaly detection by way of Azure Stream Analytics. The destination for this data will be the scored telemetry Cosmos DB container.
-
-### Task 1: Create an Azure Function to write temperature anomalies data to PostgreSQL
-
-1. Open Visual Studio Code and navigate to the folder you created in Exercise 4 for Azure Functions. In the Azure menu, navigate to the top-right corner and select **Create Function...**
-
-    ![Create Function is selected.](media/code-create-function.png 'Create Function')
-
-2. Fill in the following for each step of the function creation wizard.
-
-   | Step                             | Value                                              |
-   | -------------------------------- | ------------------------------------------         |
-   | Template                         | _select `Azure Cosmos DB trigger`_                 |
-   | Function Name                    | _`ProcessTemperatureAnomalyEvents`_                |
-   | Namespace                        | _`ModernApp`_                                      |
-   | Setting from local.settings.json | _select `modernizeapp_COSMOSDB`_                   |
-   | Database name                    | _`sensors`_                                        |
-   | Collection name                  | _`scored_telemetry`_                               |
-
-   ![The correct template is selected, indicating the first step in the process.](media/code-cosmosdb-trigger.png 'Cosmos DB Trigger')
-
-3. In the **ProcessTemperatureAnomalyEvents.cs** file, replace the existing code with the following.
-
-    ```csharp
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.Azure.Documents;
-    using Microsoft.Azure.WebJobs;
-    using Microsoft.Azure.WebJobs.Host;
-    using Microsoft.Extensions.Logging;
-    using Npgsql;
-
-    namespace ModernApp
-    {
-        public static class ProcessTemperatureAnomalyEvents
-        {
-            [FunctionName("ProcessTemperatureAnomalyEvents")]
-            public static void Run([CosmosDBTrigger(
-                databaseName: "sensors",
-                collectionName: "scored_telemetry",
-                ConnectionStringSetting = "modernizeapp_COSMOSDB",
-                LeaseCollectionName = "leases")]IReadOnlyList<Document> input, ILogger log)
-            {
-                foreach (Document doc in input) {
-                    // Deserialize the incoming document
-                    TelemetryOutput to = LoadTelemetryRecord(doc);
-
-                    // Write telemetry event to Postgres
-                    WriteTelemetryEventToPostgres(to);
-                }
-            }
-
-            public static TelemetryOutput LoadTelemetryRecord(Document doc)
-            {
-                TelemetryOutput to = new TelemetryOutput();
-                to.entity_id = doc.GetPropertyValue<string>("entity_id");
-                to.entity_type = doc.GetPropertyValue<string>("entity_type");
-                to.event_data = doc.GetPropertyValue<string>("event_data");
-                to.event_type = doc.GetPropertyValue<string>("event_type");
-                to.machineid = doc.GetPropertyValue<int>("machineid");
-                to.id = doc.GetPropertyValue<string>("id");
-
-                return to;
-            }
-
-            public static void WriteTelemetryEventToPostgres(TelemetryOutput to)
-            {
-                string insertCommand = @"INSERT INTO event(
-                    machine_id,
-                    event_id,
-                    event_type,
-                    entity_type,
-                    entity_id,
-                    event_data
-                )
-                VALUES
-                (
-                    @machine_id,
-                    @event_id,
-                    @event_type,
-                    @entity_type,
-                    @entity_id,
-                    CAST(@event_data AS json)
-                );";
-
-                // Connect to Postgres
-                var connStr = Environment.GetEnvironmentVariable("pg_connection");
-                using (var conn = new NpgsqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    using (var cmd = new NpgsqlCommand(insertCommand, conn))
-                    {
-                        cmd.Parameters.AddWithValue("machine_id", to.machineid);
-                        cmd.Parameters.AddWithValue("event_id", to.id);
-                        cmd.Parameters.AddWithValue("event_type", to.event_type);
-                        cmd.Parameters.AddWithValue("entity_type", to.entity_type);
-                        cmd.Parameters.AddWithValue("entity_id", to.entity_id);
-                        cmd.Parameters.AddWithValue("event_data", to.event_data);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-        }
-    }
-    ```
-
-    For this Azure function, the `Run()` method reads the `sensors.scored_telemetry` collection for new anomalies and writes these to Postgres.
-
-4. In the Visual Studio Code terminal, enter the following commands.
-
-    ```cmd
-    dotnet restore
-    dotnet build
-    ```
-
-    After running these commands, you should receive a message that the build succeeded.
-
-    ![The Azure Function built successfully.](media/code-function-build-succeeded.png 'Build succeeded.')
-
-### Task 2: Deploy and configure an Azure Function
-
-1. In Visual Studio Code, select the **Azure** menu option and navigate to **Functions**. Drill down into **Local Project** to **Functions** until you see the **ProcessTemperatureAnomalyEvents** function.
-
-    ![The Azure Function.](media/code-function-view.png 'ProcessTemperatureAnomalyEvents')
-
-2. Select the **ProcessTemperatureAnomalyEvents** function and then select the **Deploy to Function App...** operation. You may need to move the mouse to the top-right corner of the Functions tab to view this option.
-
-    ![Deploy to Function App is selected.](media/code-function-deploy.png 'Deploy to Function App...')
-
-3. Choose the Function App starting with **modernize-app** from the Function App list.
-
-    ![The appropriate Function App is selected.](media/code-function-deploy-app.png 'Select Function App in Azure')
-
-4. Select **Deploy** in the ensuing modal dialog.
-
-    ![The option to deploy is selected.](media/code-function-deploy-check.png 'Deploy')
-
-5. After deployment completes, return to Azure Data Studio and run the following query to confirm that temperature anomaly records have reached PostgreSQL.
-
-    ```sql
-    SELECT * FROM event WHERE event_type = 'Temperature Anomaly';
-    ```
-
-    ![Temperature anomaly data appears in PostgreSQL.](media/azure-data-studio-temperature-anomaly.png 'Temperature Anomaly')
-
-    >**Note**:  It may take 2-5 minutes for temperature anomalies to reach PostgreSQL.
-
-## Exercise 8: Modernize services logic to use event sourcing and CQRS
+## Exercise 6: Modernize services logic to use event sourcing and CQRS
 
 Duration: 15 minutes
 
@@ -1922,7 +1130,17 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
 
 1. In PowerShell, change your directory to `Hands-on lab\Resources\Microservices`.
 
-2. Run the following commands to build the docker containers, substituting the name of the container registry you created before the Hands-on Lab:
+2. Navigate to the Terminal and enter the following command:
+
+    ```powershell
+    docker login -u <USERNAME> -p "<PASSWORD>" <CONTAINER_REGISTRY>
+    ```
+
+    Enter appropriate values for username, password, and container registry URL.  You can find these on the **Access keys** menu of the Container registry you have created.
+
+    ![Log in to the Azure Container Repository account.](media/microservices-login.png 'Docker login')
+
+3. Run the following commands to build the docker containers, substituting the name of the container registry you created before the Hands-on Lab:
 
     ```powershell
     docker build -f .\SynapseInnovateMcwWebapp\Dockerfile -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-webapp .
@@ -1932,7 +1150,9 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
     docker build -f .\MetadataWrite\Dockerfile            -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-metadata-write .
     ```
 
-3. Run the following commands to push the containers to your container registry:
+    > **Note**:  If you receive an error when trying to build the `synapse-innovate-mcw-webapp` package reading "ERROR [internal] load build context" the reason is that the file path is too long for Windows to build the container image.  Move the `Microservices` folder to be the root directory on your drive and run the build process again.
+
+4. Run the following commands to push the containers to your container registry:
 
     ```powershell
     docker push <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-webapp
@@ -1988,8 +1208,10 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
           environmentVariables:
           - name: ASPNETCORE_URLS
             value: http://localhost:8081
-          - name: CITUS_CONNECTION_STRING
-            value: <PG_CONNECTION_STRING>
+          - name: COSMOS_DB_ACCOUNT_ENDPOINT
+            value: <COSMOS_ENDPOINT_URL>
+          - name: COSMOS_DB_AUTH_KEY
+            value: <COSMOS_PRIMARY_KEY>
   
       - name: metadataread
         properties:
@@ -2056,10 +1278,9 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
         | Field                         | Value                                                                                                                                                                                                             |
         | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
         | <REGION_CODE>                 | The region your resource group is hosted in, such as `eastus`. Review the results of `Get-AzureRmLocation \| Format-Table` if you are not sure. |
-        | <CONTAINER_REGISTRY_URL>      | The url of the container registry you created before the Hands-on Lab.                                                                                                                                            |
+        | <CONTAINER_REGISTRY_URL>      | The URL of the container registry you created before the Hands-on Lab.                                                                                                                                            |
         | <CONTAINER_REGISTRY_USERNAME> | The username of the container registry you created before the Hands-on Lab.                                                                                                                                       |
         | <CONTAINER_REGISTRY_PASSWORD> | The Primary Password of the container registry you created before the Hands-on Lab.                                                                                                                               |
-        | <PG_CONNECTION_STRING>        | `Server={modernize-app-c.postgres.database.azure.com}; Port=5432; Database=citus; Username=citus; Password={your_password}; SSL Mode=Require; Trust Server Certificate=true` *(Replacing values where appropriate)* | 
         | <COSMOS_ENDPOINT_URL>         | Something like `https://modernize-app-#SUFFIX#.documents.azure.com:443/` |
         | <COSMOS_PRIMARY_KEY>          | The Primary Key of your Cosmos DB account.                                                                                                                                                                        |
 
@@ -2079,62 +1300,7 @@ In this exercise you will deploy a group of microservices that use the CQRS patt
 
 3. You can navigate to the IP address in the table to visit the web app.
 
-### Task 4: Migrate the Change Feed Processor Function to a Container
-
-In a high-load production environment, instead of using an Azure Function to process our Cosmos DB Change Feed we could use a Kubernetes Pod in AKS. Because of new additions to the Cosmos DB SDK in version 3, the AKS pod could auto-scale in and out based on the volume of changes. For the sake of this lab though, we're just going to host it in our ACI Container Group.
-
-The business logic in our container will be nearly the same as in our Function from Exercise 5, Task 3. You can view the new code at `Hands-on lab/Resources/Microservices/ProcessTelemetryEventsContainer/ProcessTelemetryEvents.cs`.
-
-1. With `Hands-on lab\Resources\Microservices` as your working directory in PowerShell, run the following command (remembering to substitute the name of the container registry): 
-
-    ```powershell
-    docker build -f .\ProcessTelemetryEventsContainer\Dockerfile -t <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container .
-    ```
-
-2. Run the following command to push this container to your container registry as well: 
-
-    ```powershell
-    docker push <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container
-    ```
-
-3. In your `deploy-aci.yml` file add the following text right after the `queryservice` section (remembering to substitute your real values for the values in brackets):
-
-    ```yml
-      - name: processtelemetryeventscontainer
-        properties: 
-          image: <CONTAINER_REGISTRY_URL>/microservices/synapse-innovate-mcw-process-telemetry-events-container
-          resources:
-            requests:
-              cpu: 0.5
-              memoryInGb: 1.5
-          environmentVariables:
-            - name: COSMOS_DB_ACCOUNT_ENDPOINT
-              value: <COSMOS_ENDPOINT_URL>
-            - name: COSMOS_DB_AUTH_KEY
-              value: <COSMOS_PRIMARY_KEY>
-            - name: azureMLEndpointUrl
-              value: <AZURE_ML_ENDPOINT_URL>
-            - name: eventHubConnection
-              value: <EVENT_HUB_CONNECTION>
-            - name: eventHubName
-              value: <EVENT_HUB_NAME>
-            - name: pg_connection
-              value: <PG_CONNECTION>
-    ```
-
-4. Deploy your container group again with:
-
-    ```powershell
-    az container create --resource-group modernize-app --file .\deploy-aci.yaml
-    ```
-
-5. You can view the logs of your new container and verify it's running by executing this command: 
-
-    ```powershell
-    az container logs --resource-group modernize-app --name modernizeappmicroservices --container-name processtelemetryeventscontainer
-    ```
-
-## Exercise 9: View the factory status in a Power BI report
+## Exercise 7: View the factory status in a Power BI report
 
 Duration: 30 minutes
 
@@ -2169,7 +1335,7 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
    | Name                           | _`modernize_app_cosmos`_                           |
    | Account selection method       | _select `From Azure subscription`_                 |
    | Cosmos  DB account name        | _select the appropriate account_                   |
-   | Database name                  | _select `sensors`                                  |
+   | Database name                  | _select `sensors`_                                 |
 
    ![In the New linked service output, form field entries are filled in.](media/azure-synapse-cosmos-linked-service-2.png 'Azure Cosmos DB (SQL API) linked service form details')
 
@@ -2220,12 +1386,18 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
 
     >**Note**: it may take several minutes for a Spark session to start. The notebook cell output text will read "Starting Spark session" during this time.
 
-13. Below the first code block, select **+** and add a new code cell. Enter and then run the following code to create a new SQL Pool table with machine anomaly data.
+13. Below the first code block, select **+ Code** and add a new code cell. Enter and then run the following code to create a new SQL Pool table with machine anomaly data.
 
     ```scala
     // Ensure that this table does not already exist on your SQL Pool; otherwise, you will get an error!
     dfFlat.write.synapsesql("modernapp.dbo.MachineTelemetry", Constants.INTERNAL)
     ```
+
+    > **Note**:  you might receive the following error when executing this block.
+    >
+    > *org.apache.hadoop.fs.azurebfs.contracts.exceptions.AbfsRestOperationException: Operation failed: "This request is not authorized to perform this operation using this permission.", 403, HEAD*.
+    >
+    > If you do receive this error, it means that you are not the storage blob owner.  To fix this, navigate to the **modappadls#SUFFIX#** storage account and select **Access Control (IAM)** from the **Settings** menu.  Then, add the **Storage Blob Data Owner** role assignment to your user.  Wait a few minutes for this to propagate and you should be able to execute the above script.
 
 14. After the code segment completes, select **+** and add a new cell with the following code to ensure that the SQL pool has loaded correctly.
 
@@ -2399,7 +1571,7 @@ In this final exercise, you will load data from Cosmos DB containers into an Azu
 
 Duration: 10 minutes
 
-### Task 1: Delete Lab Resources
+### Task 1: Delete lab resources
 
 1. Log into the [Azure Portal](https://portal.azure.com).
 
@@ -2419,7 +1591,7 @@ Duration: 10 minutes
 
     ![Confirm the resource group to delete.](media/azure-delete-resource-group-2.png 'Confirm resource group deletion')
 
-### Task 2:  Delete the Power BI Workspace
+### Task 2:  Delete the Power BI workspace
 
 1. Navigate to [Power BI](https://app.powerbi.com) and log in if prompted.
 
