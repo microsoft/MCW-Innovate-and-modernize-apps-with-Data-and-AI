@@ -590,14 +590,10 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
 12. Replace the contents of **WriteEventsToTelemetryContainer.cs** with the following, and then save the file.
 
     ```csharp
-    using IoTHubTrigger = Microsoft.Azure.WebJobs.EventHubTriggerAttribute;
-
+    using System;
     using System.Threading.Tasks;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Azure.WebJobs.Host;
-    using Microsoft.Azure.EventHubs;
-    using System.Text;
-    using System.Net.Http;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using Microsoft.Azure.Cosmos;
@@ -624,7 +620,6 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
             public double temperature {get; set;}
             public int humidity {get; set;}
         }
-
         public class TelemetryOutput
         {
             public string id {get; set;}
@@ -642,26 +637,19 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
             private static readonly string databaseId = "sensors";
             private static readonly string outputContainerId = "telemetry";
             private static CosmosClient cosmosClient = new CosmosClient(cosmosEndpointUrl, cosmosPrimaryKey);
-            private static HttpClient client = new HttpClient();
 
             [FunctionName("WriteEventsToTelemetryContainer")]
-            public static async Task Run([IoTHubTrigger("messages/modules/WWIFactorySensorModule/outputs",
-                ConsumerGroup = "telemetry",
-                Connection = "IoTHubTriggerConnection")]EventData message, ILogger log)
+            public static async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
             {
                 try
                 {
-                    string body = Encoding.UTF8.GetString(message.Body.Array);
-                    MessageBody hubMessage = JsonConvert.DeserializeObject<MessageBody>(body);
-                    int? machineid = hubMessage?.machine?.machineId;
-
-                    log.LogInformation($"C# IoT Hub trigger function processed a message: {body}");
-                    log.LogInformation($"Machine ID: {machineid}");
-
+                    Random rand = new Random();
+                    var msg = GenerateNewMessage(rand);
+                    var body = JsonConvert.SerializeObject(msg);
                     var telemetry = cosmosClient.GetContainer(databaseId, outputContainerId);
                     TelemetryOutput to = new TelemetryOutput {
                         id = System.Guid.NewGuid().ToString(),
-                        machineid = machineid ?? 0,
+                        machineid = msg.machine.machineId,
                         event_type = "Telemetry Ingest",
                         entity_type = "MachineTelemetry",
                         entity_id = System.Guid.NewGuid().ToString(),
@@ -674,6 +662,61 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
                     log.LogError("Exception creating telemetry data" + e);
                 }
             }
+
+            // Simulate factory activity to create a new message
+            private static MessageBody GenerateNewMessage(Random rand)
+            {
+                // This sensor will be attached to machine 12345
+                var machine = new Machine { machineId = 12345 };
+                // Create values for temperature, stamp pressure, and electricity utilization
+                machine.temperature = GenerateDoubleValue(rand, 55.0, 2.4);
+                machine.pressure = GenerateDoubleValue(rand, 7539, 14);
+                machine.electricityUtilization = GenerateDoubleValue(rand, 29.36, 1.1);
+
+                // This represents conditions around the stamp press: the current temperature and humidity levels of the room itself
+                var ambient = new Ambient();
+                ambient.temperature = GenerateDoubleValue(rand, 22.6, 1.1);
+                ambient.humidity = Convert.ToInt32(GenerateDoubleValue(rand, 20.0, 3.5));
+
+                // The machine is in factory 1
+                return new MessageBody
+                {
+                    factoryId = 1,
+                    machine = machine,
+                    ambient = ambient,
+                    timeCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                };
+            }
+
+            // Returned values generally follow a normal distribution and we pass in the mean and standard deviation,
+            // but occasionally we will get anomalies which report values well outside the expectations for this distribution
+            private static double GenerateDoubleValue(Random rand, double mean, double stdDev, double likelihoodOfAnomaly = 0.06)
+            {
+                double u1 = rand.NextDouble();
+
+                double res = BoxMullerTransformation(rand, mean, stdDev);
+
+                if (u1 <= likelihoodOfAnomaly / 2.0)
+                {
+                    // Generate a negative anomaly
+                    res = res * 0.6;
+                }
+                else if (u1 > likelihoodOfAnomaly / 2.0 && u1 <= likelihoodOfAnomaly)
+                {
+                    // Generate a positive anomaly
+                    res = res * 1.8;
+                }
+
+                return res;
+            }
+
+            private static double BoxMullerTransformation(Random rand, double mean, double stdDev)
+            {
+                double u1 = 1.0 - rand.NextDouble();
+                double u2 = 1.0 - rand.NextDouble();
+                double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+                return mean + stdDev * randStdNormal;
+            }
         }
     }
     ```
@@ -684,8 +727,6 @@ For this lab, we will simulate the IoT process using an Azure Function. In this 
 
     ```cmd
     dotnet add package Microsoft.Azure.Cosmos
-    dotnet add package Microsoft.Azure.DocumentDB
-    dotnet add package Microsoft.Azure.DocumentDB.Core
     dotnet restore
     dotnet build
     ```
